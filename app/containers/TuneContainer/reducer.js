@@ -3,24 +3,37 @@
  * TuneContainer reducer
  *
  */
-import produce from 'immer'
-import { createActions } from 'reduxsauce'
+import produce from 'immer';
+import get from 'lodash/get';
+import { createActions } from 'reduxsauce';
 
-export const initialState = {}
+export const initialState = { searchTerm: null, songsData: [], songsError: null };
 
 export const { Types: tuneContainerTypes, Creators: tuneContainerCreators } = createActions({
-  defaultAction: ['somePayload']
-})
+  requestGetItuneSongs: ['searchTerm'],
+  successGetItuneSongs: ['data'],
+  failureGetItuneSongs: ['error'],
+  clearItuneSongs: []
+});
 
 /* eslint-disable default-case, no-param-reassign */
 export const tuneContainerReducer = (state = initialState, action) =>
-  produce(state, (/* draft */) => {
+  produce(state, (draft) => {
     switch (action.type) {
-      case tuneContainerTypes.DEFAULT_ACTION:
-        return {...state, somePayload: action.somePayload}
-      default:
-        return state
+      case tuneContainerTypes.REQUEST_GET_ITUNE_SONGS:
+        draft.searchTerm = action.searchTerm;
+        break;
+      case tuneContainerTypes.SUCCESS_GET_ITUNE_SONGS:
+        draft.songsData = action.data;
+        draft.songsError = null;
+        break;
+      case tuneContainerTypes.FAILURE_GET_ITUNE_SONGS:
+        draft.songsError = get(action.error, 'message', 'something_went_wrong');
+        draft.songsData = [];
+        break;
+      case tuneContainerTypes.CLEAR_ITUNE_SONGS:
+        return initialState;
     }
-  })
+  });
 
-export default tuneContainerReducer
+export default tuneContainerReducer;

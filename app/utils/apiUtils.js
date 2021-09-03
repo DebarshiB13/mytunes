@@ -5,11 +5,15 @@ import { mapKeysDeep } from './index';
 
 const apiClients = {
   github: null,
-  default: null
+  default: null,
+  itunes: null
 };
 export const getApiClient = (type = 'github') => apiClients[type];
 export const generateApiClient = (type = 'github') => {
   switch (type) {
+    case 'itunes':
+      apiClients[type] = createApiClientWithTransForm(process.env.ITUNES_URL);
+      return apiClients[type];
     case 'github':
       apiClients[type] = createApiClientWithTransForm(process.env.GITHUB_URL);
       return apiClients[type];

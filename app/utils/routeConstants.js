@@ -6,5 +6,13 @@ export default {
       padding: 20
     },
     exact: true
+  },
+  songs: {
+    route: '/songs',
+    props: {
+      maxwidth: 500,
+      padding: 20
+    },
+    exact: true
   }
 };
