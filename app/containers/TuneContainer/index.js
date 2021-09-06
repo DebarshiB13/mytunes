@@ -36,8 +36,8 @@ export function TuneContainer({
   dispatchItuneSongs,
   dispatchClearItuneSongs,
   intl,
-  songsData = {},
-  songsError = null,
+  songsData,
+  songsError,
   searchTerm,
   maxwidth,
   padding

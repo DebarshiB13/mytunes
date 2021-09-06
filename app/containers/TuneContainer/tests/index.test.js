@@ -20,6 +20,11 @@ describe('<TuneContainer /> container tests', () => {
     expect(baseElement).toMatchSnapshot();
   });
 
+  it('should render the SearchBar in the document', () => {
+    const { getByTestId } = renderProvider(<TuneContainer />);
+    expect(getByTestId('search-bar')).toBeInTheDocument();
+  });
+
   it('should call dispatchClearItuneSongs on empty change', async () => {
     const getItuneSongsSpy = jest.fn();
     const clearItuneSongsSpy = jest.fn();
