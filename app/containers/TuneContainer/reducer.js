@@ -3,6 +3,7 @@
  * TuneContainer reducer
  *
  */
+import { translate } from '@app/components/IntlGlobalProvider/index';
 import produce from 'immer';
 import get from 'lodash/get';
 import { createActions } from 'reduxsauce';
@@ -28,7 +29,7 @@ export const tuneContainerReducer = (state = initialState, action) =>
         draft.songsError = null;
         break;
       case tuneContainerTypes.FAILURE_GET_ITUNE_SONGS:
-        draft.songsError = get(action.error, 'message', 'something_went_wrong');
+        draft.songsError = get(action.error, 'message', translate('something_went_wrong'));
         draft.songsData = [];
         break;
       case tuneContainerTypes.CLEAR_ITUNE_SONGS:

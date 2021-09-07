@@ -1,9 +1,14 @@
 // import produce from 'immer'
 import { tuneContainerReducer, tuneContainerTypes, initialState } from '../reducer';
+import { setIntl, translate } from '@components/IntlGlobalProvider';
+import getIntl from '@utils/createintl';
 
 /* eslint-disable default-case, no-param-reassign */
 describe('TuneContainer reducer tests', () => {
   let state;
+  beforeAll(() => {
+    setIntl(getIntl());
+  });
   beforeEach(() => {
     state = initialState;
   });
@@ -35,7 +40,7 @@ describe('TuneContainer reducer tests', () => {
   });
 
   it('should ensure that the songErrorMessage has some data and songLoading = false when FETCH_SONG_FAILURE is dispatched', () => {
-    const error = 'something_went_wrong';
+    const error = translate('something_went_wrong');
     const expectedResult = { ...state, songsError: error };
     expect(
       tuneContainerReducer(state, {
