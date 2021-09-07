@@ -20,7 +20,10 @@ import { Input, Card, Skeleton, Row } from 'antd';
 import styled from 'styled-components';
 import debounce from 'lodash/debounce';
 import T from '@components/T';
-import { TuneCard } from '@app/components/TuneCard/index';
+import { TuneCard } from '@components/TuneCard/index';
+import For from '@components/For/index';
+import { map } from 'lodash';
+import If from '@app/components/If/index';
 
 const { Search } = Input;
 
@@ -94,21 +97,23 @@ export function TuneContainer({
     const resultCount = get(songsData, 'resultCount', 0);
 
     return (
-      (results.length !== 0 || loading) && (
+      <If condition={results.length !== 0 || loading}>
         <CustomCard data-testid="songs-card">
           <Skeleton loading={loading} active>
-            {searchTerm && (
+            <If condition={searchTerm}>
               <div>
                 <T id="search_term" values={{ searchTerm }} />
               </div>
-            )}
-            {resultCount !== 0 && (
+            </If>
+            <If condition={resultCount !== 0}>
               <div>
                 <T id="matching_tracks" values={{ resultCount }} />
               </div>
-            )}
-            <CardRow>
-              {results.map((result, index) => (
+            </If>
+            <For
+              ParentComponent={CardRow}
+              of={map(results)}
+              renderItem={(result, index) => (
                 <TuneCard
                   key={index}
                   artistName={result.artistName}
@@ -116,11 +121,11 @@ export function TuneContainer({
                   cardImg={result.artworkUrl100}
                   previewUrl={result.previewUrl}
                 />
-              ))}
-            </CardRow>
+              )}
+            />
           </Skeleton>
         </CustomCard>
-      )
+      </If>
     );
   };
 
@@ -132,8 +137,7 @@ export function TuneContainer({
       songError = 'track_search_default';
     }
     return (
-      !loading &&
-      songError && (
+      <If condition={!loading && songError}>
         <CustomCard
           data-testid="error-card"
           color={songsError ? 'red' : 'grey'}
@@ -141,7 +145,7 @@ export function TuneContainer({
         >
           <T id={songError} />
         </CustomCard>
-      )
+      </If>
     );
   };
 

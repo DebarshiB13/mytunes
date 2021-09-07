@@ -44,4 +44,14 @@ describe('TuneContainer reducer tests', () => {
       })
     ).toEqual(expectedResult);
   });
+
+  it('should ensure that the songData is empty when CLEAR_SONG is dispatched', () => {
+    const expectedResult = { ...state, songsData: [] };
+    expect(
+      tuneContainerReducer(state, {
+        type: tuneContainerTypes.CLEAR_ITUNE_SONGS,
+        expectedResult
+      })
+    ).toEqual(expectedResult);
+  });
 });
