@@ -95,7 +95,7 @@ export function TuneContainer({
 
     return (
       (results.length !== 0 || loading) && (
-        <CustomCard>
+        <CustomCard data-testid="songs-card">
           <Skeleton loading={loading} active>
             {searchTerm && (
               <div>
@@ -123,6 +123,28 @@ export function TuneContainer({
       )
     );
   };
+
+  const renderErrorState = () => {
+    let songError;
+    if (songsError) {
+      songError = songsError;
+    } else if (!get(songsData, 'resultCount', 0)) {
+      songError = 'track_search_default';
+    }
+    return (
+      !loading &&
+      songError && (
+        <CustomCard
+          data-testid="error-card"
+          color={songsError ? 'red' : 'grey'}
+          title={intl.formatMessage({ id: 'track_list' })}
+        >
+          <T id={songError} />
+        </CustomCard>
+      )
+    );
+  };
+
   return (
     <Container maxwidth={maxwidth} padding={padding}>
       <CustomCard>
@@ -135,6 +157,7 @@ export function TuneContainer({
         />
       </CustomCard>
       {renderSongList()}
+      {renderErrorState()}
     </Container>
   );
 }

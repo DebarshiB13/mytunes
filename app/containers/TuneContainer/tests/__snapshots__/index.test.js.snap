@@ -56,6 +56,35 @@ exports[`<TuneContainer /> container tests should render and match the snapshot 
           </span>
         </div>
       </div>
+      <div
+        class="ant-card ant-card-bordered TuneContainer__CustomCard-sc-1u7g34z-0 ioqdHn"
+        color="grey"
+        data-testid="error-card"
+      >
+        <div
+          class="ant-card-head"
+        >
+          <div
+            class="ant-card-head-wrapper"
+          >
+            <div
+              class="ant-card-head-title"
+            >
+              Track List
+            </div>
+          </div>
+        </div>
+        <div
+          class="ant-card-body"
+        >
+          <p
+            class="T__StyledText-gjlic1-0 kYcyRq"
+            data-testid="t"
+          >
+            Search for a track or artist by entering it in the search box
+          </p>
+        </div>
+      </div>
     </div>
   </div>
 </body>

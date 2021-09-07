@@ -34,18 +34,20 @@ export function TuneCard({ maxwidth, artistName, collectionName, cardImg, previe
 
   const handlePlay = () => {
     if (isPlaying) {
+      audioRef.current.pause();
       audioRef.current.src = '';
       setIsPlaying(false);
     } else {
       audioRef.current.src = previewUrl;
-      setIsPlaying(true);
+      audioRef.current.load();
       audioRef.current.play();
+      setIsPlaying(true);
     }
   };
   return (
     <ItemCard maxwidth={maxwidth}>
       <Typography.Title style={{ fontSize: 16 }}>{artistName}</Typography.Title>
-      <Image src={cardImg} width="100%" preview="false" />
+      <Image src={cardImg} width="100%" preview={false} />
       <Typography.Paragraph style={{ fontSize: 18 }}>{collectionName}</Typography.Paragraph>
 
       <IconButton

@@ -25,6 +25,24 @@ describe('<TuneContainer /> container tests', () => {
     expect(getByTestId('search-bar')).toBeInTheDocument();
   });
 
+  it('should render songs data card when songsData is available', () => {
+    const data = {
+      resultCount: 2,
+      results: [
+        { id: 1, name: 'Some data 1' },
+        { id: 2, name: 'Some another data' }
+      ]
+    };
+    const { getByTestId } = renderProvider(<TuneContainer songsData={data} />);
+    expect(getByTestId('songs-card')).toBeInTheDocument();
+  });
+
+  it('should render error card when songsError is true', () => {
+    const error = 'something_went_wrong';
+    const { getByTestId } = renderProvider(<TuneContainer songsError={error} />);
+    expect(getByTestId('error-card')).toBeInTheDocument();
+  });
+
   it('should call dispatchClearItuneSongs on empty change', async () => {
     const getItuneSongsSpy = jest.fn();
     const clearItuneSongsSpy = jest.fn();
