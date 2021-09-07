@@ -16,18 +16,37 @@ import tuneContainerSaga from './saga';
 import { injectSaga } from 'redux-injectors';
 import get from 'lodash/get';
 import isEmpty from 'lodash/isEmpty';
-import { Input } from 'antd';
+import { Input, Card, Skeleton, Row } from 'antd';
 import styled from 'styled-components';
 import debounce from 'lodash/debounce';
+import T from '@components/T';
+import { TuneCard } from '@app/components/TuneCard/index';
 
 const { Search } = Input;
 
+const CustomCard = styled(Card)`
+  && {
+    margin: 20px 0;
+    flex-wrap: wrap;
+    /* max-width: ${(props) => props.maxwidth}; */
+    color: ${(props) => props.color};
+    ${(props) => props.color && `color: ${props.color}`};
+  }
+`;
+
+const CardRow = styled(Row)`
+  && {
+    display: flex;
+    justify-content: space-around;
+    flex-wrap: wrap;
+  }
+`;
 const Container = styled.div`
   && {
     display: flex;
     flex-direction: column;
-    max-width: ${(props) => props.maxwidth}px;
-    width: 100%;
+    /* max-width: ${(props) => props.maxwidth}px; */
+    width: 70%;
     margin: 0 auto;
     padding: ${(props) => props.padding}px;
   }
@@ -69,15 +88,53 @@ export function TuneContainer({
   };
 
   const debouncedHandleOnChange = debounce(handleOnChange, 200);
+
+  const renderSongList = () => {
+    const results = get(songsData, 'results', []);
+    const resultCount = get(songsData, 'resultCount', 0);
+
+    return (
+      (results.length !== 0 || loading) && (
+        <CustomCard>
+          <Skeleton loading={loading} active>
+            {searchTerm && (
+              <div>
+                <T id="search_term" values={{ searchTerm }} />
+              </div>
+            )}
+            {resultCount !== 0 && (
+              <div>
+                <T id="matching_tracks" values={{ resultCount }} />
+              </div>
+            )}
+            <CardRow>
+              {results.map((result, index) => (
+                <TuneCard
+                  key={index}
+                  artistName={result.artistName}
+                  collectionName={result.collectionName}
+                  cardImg={result.artworkUrl100}
+                  previewUrl={result.previewUrl}
+                />
+              ))}
+            </CardRow>
+          </Skeleton>
+        </CustomCard>
+      )
+    );
+  };
   return (
     <Container maxwidth={maxwidth} padding={padding}>
-      <Search
-        data-testid="search-bar"
-        defaultValue={searchTerm}
-        type="text"
-        onChange={(evt) => debouncedHandleOnChange(evt.target.value)}
-        onSearch={(searchText) => debouncedHandleOnChange(searchText)}
-      />
+      <CustomCard>
+        <Search
+          data-testid="search-bar"
+          defaultValue={searchTerm}
+          type="text"
+          onChange={(evt) => debouncedHandleOnChange(evt.target.value)}
+          onSearch={(searchText) => debouncedHandleOnChange(searchText)}
+        />
+      </CustomCard>
+      {renderSongList()}
     </Container>
   );
 }
