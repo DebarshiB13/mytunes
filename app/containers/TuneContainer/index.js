@@ -31,7 +31,6 @@ const CustomCard = styled(Card)`
   && {
     margin: 20px 0;
     flex-wrap: wrap;
-    /* max-width: ${(props) => props.maxwidth}; */
     color: ${(props) => props.color};
     ${(props) => props.color && `color: ${props.color}`};
   }
@@ -48,7 +47,6 @@ const Container = styled.div`
   && {
     display: flex;
     flex-direction: column;
-    /* max-width: ${(props) => props.maxwidth}px; */
     width: 70%;
     margin: 0 auto;
     padding: ${(props) => props.padding}px;
@@ -98,7 +96,7 @@ export function TuneContainer({
 
     return (
       <If condition={results.length !== 0 || loading}>
-        <CustomCard data-testid="songs-card">
+        <CustomCard>
           <Skeleton loading={loading} active>
             <If condition={searchTerm}>
               <div>
@@ -157,7 +155,6 @@ export function TuneContainer({
           defaultValue={searchTerm}
           type="text"
           onChange={(evt) => debouncedHandleOnChange(evt.target.value)}
-          onSearch={(searchText) => debouncedHandleOnChange(searchText)}
         />
       </CustomCard>
       {renderSongList()}

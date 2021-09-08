@@ -25,7 +25,7 @@ describe('<TuneContainer /> container tests', () => {
     expect(getByTestId('search-bar')).toBeInTheDocument();
   });
 
-  it('should render songs data card when songsData is available', () => {
+  it('should render for component when songsData is available', () => {
     const data = {
       resultCount: 2,
       results: [
@@ -34,13 +34,31 @@ describe('<TuneContainer /> container tests', () => {
       ]
     };
     const { getByTestId } = renderProvider(<TuneContainer songsData={data} />);
-    expect(getByTestId('songs-card')).toBeInTheDocument();
+    expect(getByTestId('for')).toBeInTheDocument();
   });
 
   it('should render error card when songsError is true', () => {
     const error = 'something_went_wrong';
     const { getByTestId } = renderProvider(<TuneContainer songsError={error} />);
     expect(getByTestId('error-card')).toBeInTheDocument();
+  });
+
+  it('should call dispatchItuneSongs when songsData results is not available but searchTerm is available', async () => {
+    const searchTerm = 'AlanWalker';
+
+    const data = {};
+    renderProvider(<TuneContainer dispatchItuneSongs={submitSpy} searchTerm={searchTerm} songsData={data} />);
+    await timeout(500);
+    expect(submitSpy).toBeCalled();
+  });
+
+  it('should call dispatchItuneSongs on change', async () => {
+    const { getByTestId } = renderProvider(<TuneContainer dispatchItuneSongs={submitSpy} />);
+    fireEvent.change(getByTestId('search-bar'), {
+      target: { value: 'some song' }
+    });
+    await timeout(500);
+    expect(submitSpy).toBeCalled();
   });
 
   it('should call dispatchClearItuneSongs on empty change', async () => {
@@ -59,14 +77,5 @@ describe('<TuneContainer /> container tests', () => {
     });
     await timeout(500);
     expect(clearItuneSongsSpy).toBeCalled();
-  });
-
-  it('should call dispatchItuneSongs on change', async () => {
-    const { getByTestId } = renderProvider(<TuneContainer dispatchItuneSongs={submitSpy} />);
-    fireEvent.change(getByTestId('search-bar'), {
-      target: { value: 'some song' }
-    });
-    await timeout(500);
-    expect(submitSpy).toBeCalled();
   });
 });

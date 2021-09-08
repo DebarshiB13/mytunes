@@ -24,19 +24,22 @@ describe('<TuneCard />', () => {
     expect(handlePlay).toHaveBeenCalled();
   });
 
-  it('should call play/pause when audio is played or paused', () => {
-    const play = jest.fn();
-    const pause = jest.fn();
-    const songPreviewlUrl =
-      'https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview115/v4/f9/da/66/f9da6605-fafe-6e21-6e11-e58f2221b7bf/mzaf_5280154181764903840.plus.aac.p.m4a';
+  it('should play/pause audio when button is clicked', () => {
+    const playStub = jest.spyOn(window.HTMLMediaElement.prototype, 'play').mockImplementation(() => {});
+    const pauseStub = jest.spyOn(window.HTMLMediaElement.prototype, 'pause').mockImplementation(() => {});
 
-    const { getByTestId } = renderWithIntl(<TuneCard previewUrl={songPreviewlUrl} />);
-    let audio = getByTestId('audio');
-    fireEvent.change(audio, { onplay: play() });
-    expect(play).toBeCalled();
+    const { getByTestId } = renderWithIntl(<TuneCard />);
 
-    fireEvent.change(audio, { onpause: pause() });
-    expect(play).toBeCalled();
+    const button = getByTestId('play-pause-btn');
+
+    fireEvent.click(button);
+    expect(playStub).toHaveBeenCalled();
+
+    fireEvent.click(button);
+    expect(pauseStub).toHaveBeenCalled();
+
+    playStub.mockRestore();
+    pauseStub.mockRestore();
   });
 
   it('should set/unset audio url on play/pause button click', () => {
