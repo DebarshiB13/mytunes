@@ -25,6 +25,15 @@ describe('<TuneContainer /> container tests', () => {
     expect(getByTestId('search-bar')).toBeInTheDocument();
   });
 
+  it('should call dispatchItuneSongs when songsData results is not available but searchTerm is available', async () => {
+    const searchTerm = 'AlanWalker';
+
+    const data = {};
+    renderProvider(<TuneContainer dispatchItuneSongs={submitSpy} searchTerm={searchTerm} songsData={data} />);
+    await timeout(500);
+    expect(submitSpy).toBeCalled();
+  });
+
   it('should call dispatchClearItuneSongs on empty change', async () => {
     const getItuneSongsSpy = jest.fn();
     const clearItuneSongsSpy = jest.fn();

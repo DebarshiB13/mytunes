@@ -76,7 +76,6 @@ export function TuneContainer({
         defaultValue={searchTerm}
         type="text"
         onChange={(evt) => debouncedHandleOnChange(evt.target.value)}
-        onSearch={(searchText) => debouncedHandleOnChange(searchText)}
       />
     </Container>
   );
