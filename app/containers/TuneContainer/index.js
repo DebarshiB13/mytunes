@@ -46,7 +46,8 @@ export function TuneContainer({
 
   useEffect(() => {
     const loaded = get(songsData, 'results', null) || songsError;
-    if (loading && loaded) {
+
+    if (loaded) {
       setLoading(false);
     }
   }, [songsData]);
@@ -77,6 +78,7 @@ export function TuneContainer({
         type="text"
         onChange={(evt) => debouncedHandleOnChange(evt.target.value)}
       />
+      <div>{loading ? 'Loading' : 'Loaded'}</div>
     </Container>
   );
 }
@@ -107,7 +109,7 @@ const mapStateToProps = createStructuredSelector({
   searchTerm: selectSearchTerm()
 });
 
-function mapDispatchToProps(dispatch) {
+export function mapDispatchToProps(dispatch) {
   const { requestGetItuneSongs, clearItuneSongs } = tuneContainerCreators;
   return {
     dispatchItuneSongs: (searchTerm) => dispatch(requestGetItuneSongs(searchTerm)),

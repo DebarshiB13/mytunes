@@ -8,7 +8,7 @@
 import React from 'react';
 import { renderProvider, timeout } from '@utils/testUtils';
 import { fireEvent } from '@testing-library/dom';
-import { TuneContainerTest as TuneContainer } from '../index';
+import { mapDispatchToProps, TuneContainerTest as TuneContainer } from '../index';
 
 describe('<TuneContainer /> container tests', () => {
   let submitSpy;
@@ -23,6 +23,27 @@ describe('<TuneContainer /> container tests', () => {
   it('should render the SearchBar in the document', () => {
     const { getByTestId } = renderProvider(<TuneContainer />);
     expect(getByTestId('search-bar')).toBeInTheDocument();
+  });
+
+  it('should set "Loading" to false and render "Loaded" when songsData or SongsError is available', async () => {
+    const songsData = {
+      resultCount: 1,
+      results: [{ id: 1, song: 'Some data' }]
+    };
+    const dispatchClearItuneSongsSpy = jest.fn();
+
+    const { getByTestId, getByText } = renderProvider(
+      <TuneContainer
+        songsData={songsData}
+        dispatchItuneSongs={submitSpy}
+        dispatchClearItuneSongs={dispatchClearItuneSongsSpy}
+      />
+    );
+    fireEvent.change(getByTestId('search-bar'), { target: { value: '' } });
+
+    await timeout(500);
+    fireEvent.change(getByTestId('search-bar'), { target: { value: 'b' } });
+    expect(getByText('Loaded')).toBeInTheDocument();
   });
 
   it('should call dispatchItuneSongs when songsData results is not available but searchTerm is available', async () => {
@@ -59,5 +80,25 @@ describe('<TuneContainer /> container tests', () => {
     });
     await timeout(500);
     expect(submitSpy).toBeCalled();
+  });
+
+  it('should match mapDispatchToProps actions', async () => {
+    const searchTerm = 'sia';
+    const dispatchSpy = jest.fn((fn) => fn);
+    const dispatchItuneSongsSpy = jest.fn(() => ({ type: 'REQUEST_GET_ITUNE_SONGS', searchTerm }));
+    const dispatchClearItuneSongsSpy = jest.fn(() => ({ type: 'CLEAR_ITUNE_SONGS' }));
+
+    const props = mapDispatchToProps(dispatchSpy);
+
+    const actions = {
+      dispatchItuneSongsSpy,
+      dispatchClearItuneSongsSpy
+    };
+
+    props.dispatchItuneSongs(searchTerm);
+    expect(dispatchSpy).toHaveBeenCalledWith(actions.dispatchItuneSongsSpy());
+    await timeout(500);
+    props.dispatchClearItuneSongs();
+    expect(dispatchSpy).toHaveBeenCalledWith(actions.dispatchClearItuneSongsSpy());
   });
 });

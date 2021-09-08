@@ -48,6 +48,9 @@ exports[`<TuneContainer /> container tests should render and match the snapshot 
           </span>
         </span>
       </span>
+      <div>
+        Loaded
+      </div>
     </div>
   </div>
 </body>
