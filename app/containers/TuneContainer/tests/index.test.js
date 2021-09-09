@@ -8,7 +8,7 @@
 import React from 'react';
 import { renderProvider, timeout } from '@utils/testUtils';
 import { fireEvent } from '@testing-library/dom';
-import { TuneContainerTest as TuneContainer } from '../index';
+import { mapDispatchToProps, TuneContainerTest as TuneContainer } from '../index';
 
 describe('<TuneContainer /> container tests', () => {
   let submitSpy;
@@ -41,6 +41,18 @@ describe('<TuneContainer /> container tests', () => {
     const error = 'something_went_wrong';
     const { getByTestId } = renderProvider(<TuneContainer songsError={error} />);
     expect(getByTestId('error-card')).toBeInTheDocument();
+  });
+
+  it('should render Skeleton Comp when "loading" is true', async () => {
+    const searchTerm = 'abc';
+
+    const { getByTestId, baseElement } = renderProvider(
+      <TuneContainer dispatchItuneSongs={submitSpy} searchTerm={searchTerm} />
+    );
+
+    fireEvent.change(getByTestId('search-bar'), { target: { value: 'b' } });
+    await timeout(500);
+    expect(baseElement.getElementsByClassName('ant-skeleton').length).toBe(1);
   });
 
   it('should call dispatchItuneSongs when songsData results is not available but searchTerm is available', async () => {
@@ -77,5 +89,34 @@ describe('<TuneContainer /> container tests', () => {
     });
     await timeout(500);
     expect(clearItuneSongsSpy).toBeCalled();
+  });
+
+  it('should call dispatchItuneSongs on change', async () => {
+    const { getByTestId } = renderProvider(<TuneContainer dispatchItuneSongs={submitSpy} />);
+    fireEvent.change(getByTestId('search-bar'), {
+      target: { value: 'some song' }
+    });
+    await timeout(500);
+    expect(submitSpy).toBeCalled();
+  });
+
+  it('should match mapDispatchToProps actions', async () => {
+    const searchTerm = 'sia';
+    const dispatchSpy = jest.fn((fn) => fn);
+    const dispatchItuneSongsSpy = jest.fn(() => ({ type: 'REQUEST_GET_ITUNE_SONGS', searchTerm }));
+    const dispatchClearItuneSongsSpy = jest.fn(() => ({ type: 'CLEAR_ITUNE_SONGS' }));
+
+    const props = mapDispatchToProps(dispatchSpy);
+
+    const actions = {
+      dispatchItuneSongsSpy,
+      dispatchClearItuneSongsSpy
+    };
+
+    props.dispatchItuneSongs(searchTerm);
+    expect(dispatchSpy).toHaveBeenCalledWith(actions.dispatchItuneSongsSpy());
+    await timeout(500);
+    props.dispatchClearItuneSongs();
+    expect(dispatchSpy).toHaveBeenCalledWith(actions.dispatchClearItuneSongsSpy());
   });
 });

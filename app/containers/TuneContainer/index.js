@@ -66,7 +66,8 @@ export function TuneContainer({
 
   useEffect(() => {
     const loaded = get(songsData, 'results', null) || songsError;
-    if (loading && loaded) {
+
+    if (loaded) {
       setLoading(false);
     }
   }, [songsData]);
@@ -95,18 +96,14 @@ export function TuneContainer({
     const resultCount = get(songsData, 'resultCount', 0);
 
     return (
-      <If condition={results.length !== 0 || loading}>
+      <If condition={results.length !== 0 || loading} otherwise={null}>
         <CustomCard>
           <Skeleton loading={loading} active>
-            <If condition={searchTerm}>
-              <div>
-                <T id="search_term" values={{ searchTerm }} />
-              </div>
+            <If condition={searchTerm} otherwise={null}>
+              <T id="search_term" values={{ searchTerm }} />
             </If>
             <If condition={resultCount !== 0}>
-              <div>
-                <T id="matching_tracks" values={{ resultCount }} />
-              </div>
+              <T id="matching_tracks" values={{ resultCount }} />
             </If>
             <For
               ParentComponent={CardRow}
@@ -189,7 +186,7 @@ const mapStateToProps = createStructuredSelector({
   searchTerm: selectSearchTerm()
 });
 
-function mapDispatchToProps(dispatch) {
+export function mapDispatchToProps(dispatch) {
   const { requestGetItuneSongs, clearItuneSongs } = tuneContainerCreators;
   return {
     dispatchItuneSongs: (searchTerm) => dispatch(requestGetItuneSongs(searchTerm)),
