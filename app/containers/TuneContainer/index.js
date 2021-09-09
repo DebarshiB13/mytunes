@@ -63,6 +63,8 @@ export function TuneContainer({
   padding
 }) {
   const [loading, setLoading] = useState(false);
+  const [currentTrack, setCurrentTrack] = useState('');
+  const [isTrackPlaying, setIsTrackPlaying] = useState(false);
 
   useEffect(() => {
     const loaded = get(songsData, 'results', null) || songsError;
@@ -115,6 +117,10 @@ export function TuneContainer({
                   collectionName={result.collectionName}
                   cardImg={result.artworkUrl100}
                   previewUrl={result.previewUrl}
+                  currentTrack={currentTrack}
+                  setCurrentTrack={setCurrentTrack}
+                  isTrackPlaying={isTrackPlaying}
+                  setIsTrackPlaying={setIsTrackPlaying}
                 />
               )}
             />

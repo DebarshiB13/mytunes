@@ -4,7 +4,7 @@
  *
  */
 
-import React, { memo, useRef, useState } from 'react';
+import React, { memo } from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { Card, Typography, Image, Button } from 'antd';
@@ -28,20 +28,37 @@ const IconButton = styled(Button)`
   align-items: center;
 `;
 
-export function TuneCard({ maxwidth, artistName, collectionName, cardImg, previewUrl }) {
-  const [isPlaying, setIsPlaying] = useState(false);
-  const audioRef = useRef();
+export function TuneCard({
+  maxwidth,
+  artistName,
+  collectionName,
+  cardImg,
+  previewUrl,
+  currentTrack,
+  setCurrentTrack,
+  isTrackPlaying,
+  setIsTrackPlaying
+}) {
+  const handlePlayPause = (trackUrl) => {
+    if (isTrackPlaying) {
+      currentTrack?.pause();
+      setIsTrackPlaying(false);
 
-  const handlePlay = () => {
-    if (isPlaying) {
-      audioRef.current.pause();
-      audioRef.current.src = '';
-      setIsPlaying(false);
+      if (currentTrack?.src !== trackUrl) {
+        const audio = new Audio(trackUrl);
+        audio.load();
+        audio.play();
+        setCurrentTrack(audio);
+        setIsTrackPlaying(true);
+      } else {
+        setCurrentTrack('');
+      }
     } else {
-      audioRef.current.src = previewUrl;
-      audioRef.current.load();
-      audioRef.current.play();
-      setIsPlaying(true);
+      const audio = new Audio(trackUrl);
+      audio.load();
+      audio.play();
+      setCurrentTrack(audio);
+      setIsTrackPlaying(true);
     }
   };
   return (
@@ -54,10 +71,15 @@ export function TuneCard({ maxwidth, artistName, collectionName, cardImg, previe
         shape="circle"
         type="text"
         data-testid="play-pause-btn"
-        onClick={handlePlay}
-        icon={isPlaying ? <PauseCircleFilled style={iconStyle} /> : <PlayCircleFilled style={iconStyle} />}
+        onClick={() => handlePlayPause(previewUrl)}
+        icon={
+          currentTrack?.src === previewUrl ? (
+            <PauseCircleFilled style={iconStyle} />
+          ) : (
+            <PlayCircleFilled style={iconStyle} />
+          )
+        }
       />
-      <audio data-testid="audio" ref={audioRef}></audio>
     </ItemCard>
   );
 }
@@ -70,7 +92,11 @@ TuneCard.propTypes = {
   maxwidth: PropTypes.number,
   collectionName: PropTypes.string,
   cardImg: PropTypes.string,
-  previewUrl: PropTypes.string
+  previewUrl: PropTypes.string,
+  currentTrack: PropTypes.string,
+  setCurrentTrack: PropTypes.func,
+  isTrackPlaying: PropTypes.boolean,
+  setIsTrackPlaying: PropTypes.func
 };
 
 export default memo(TuneCard);
