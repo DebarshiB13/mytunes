@@ -4,11 +4,12 @@
  *
  */
 
-import React, { memo } from 'react';
+import React, { memo, useState, useRef } from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { Card, Typography, Image, Button } from 'antd';
 import { PlayCircleFilled, PauseCircleFilled } from '@ant-design/icons';
+import If from '@components/If';
 
 const ItemCard = styled(Card)`
   && {
@@ -28,41 +29,23 @@ const IconButton = styled(Button)`
   align-items: center;
 `;
 
-export function TuneCard({
-  maxwidth,
-  artistName,
-  collectionName,
-  cardImg,
-  previewUrl,
-  currentTrack,
-  setCurrentTrack,
-  isTrackPlaying,
-  setIsTrackPlaying
-}) {
-  const handlePlayPause = (trackUrl) => {
-    if (isTrackPlaying) {
-      currentTrack?.pause();
-      setIsTrackPlaying(false);
+export function TuneCard({ maxwidth, artistName, collectionName, cardImg, previewUrl }) {
+  const [isPlaying, setIsPlaying] = useState(false);
+  const audioRef = useRef();
 
-      if (currentTrack?.src !== trackUrl) {
-        const audio = new Audio(trackUrl);
-        audio.load();
-        audio.play();
-        setCurrentTrack(audio);
-        setIsTrackPlaying(true);
-      } else {
-        setCurrentTrack('');
-      }
+  const handlePlayPause = (url) => {
+    if (isPlaying) {
+      audioRef.current.src = '';
+      setIsPlaying(false);
     } else {
-      const audio = new Audio(trackUrl);
-      audio.load();
-      audio.play();
-      setCurrentTrack(audio);
-      setIsTrackPlaying(true);
+      audioRef.current.src = url;
+      audioRef.current.play();
+      setIsPlaying(true);
     }
   };
+
   return (
-    <ItemCard maxwidth={maxwidth}>
+    <ItemCard maxwidth={maxwidth} data-testid="tune-card">
       <Typography.Title style={{ fontSize: 16 }}>{artistName}</Typography.Title>
       <Image src={cardImg} width="100%" preview={false} />
       <Typography.Paragraph style={{ fontSize: 18 }}>{collectionName}</Typography.Paragraph>
@@ -73,13 +56,12 @@ export function TuneCard({
         data-testid="play-pause-btn"
         onClick={() => handlePlayPause(previewUrl)}
         icon={
-          currentTrack?.src === previewUrl ? (
+          <If condition={isPlaying} otherwise={<PlayCircleFilled style={iconStyle} />}>
             <PauseCircleFilled style={iconStyle} />
-          ) : (
-            <PlayCircleFilled style={iconStyle} />
-          )
+          </If>
         }
       />
+      <audio ref={audioRef} data-testid="audio"></audio>
     </ItemCard>
   );
 }
@@ -94,9 +76,7 @@ TuneCard.propTypes = {
   cardImg: PropTypes.string,
   previewUrl: PropTypes.string,
   currentTrack: PropTypes.string,
-  setCurrentTrack: PropTypes.func,
-  isTrackPlaying: PropTypes.boolean,
-  setIsTrackPlaying: PropTypes.func
+  handlePlayPause: PropTypes.func
 };
 
 export default memo(TuneCard);

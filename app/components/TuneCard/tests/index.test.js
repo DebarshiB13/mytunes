@@ -10,13 +10,6 @@ import { renderWithIntl, timeout } from '@utils/testUtils';
 import TuneCard from '../index';
 
 describe('<TuneCard />', () => {
-  let setCurrentTrackSpy;
-  let setIsTrackPlayingSpy;
-  beforeEach(() => {
-    setCurrentTrackSpy = jest.fn();
-    setIsTrackPlayingSpy = jest.fn();
-  });
-
   it('should render and match the snapshot', () => {
     const artistName = 'Alan Walker';
     const collectionName = 'Some Collection';
@@ -24,49 +17,26 @@ describe('<TuneCard />', () => {
     expect(baseElement).toMatchSnapshot();
   });
 
-  it('should call handlePlayPause on Click', () => {
+  it('should call handlePlayPause on Click', async () => {
     const handlePlayPauseSpy = jest.fn();
-    const { getByTestId } = renderWithIntl(
-      <TuneCard setCurrentTrack={setCurrentTrackSpy} setIsTrackPlaying={setIsTrackPlayingSpy} />
-    );
+    const { getByTestId } = renderWithIntl(<TuneCard handlePlayPause={handlePlayPauseSpy} />);
 
     fireEvent.click(getByTestId('play-pause-btn'), { onclick: handlePlayPauseSpy() });
     expect(handlePlayPauseSpy).toHaveBeenCalled();
   });
 
-  it('should call "setIsTrackPlaying" and "setCurrentTrack" when play/pause button is clicked', async () => {
-    const isTrackingPlaying = true;
+  it('should set/unset songsUrl on handlePlayPause call', async () => {
+    const handlePlayPauseSpy = jest.fn();
+    const songUrl =
+      'https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview115/v4/d2/c1/c4/d2c1c496-4001-d10f-bbf6-626eb5bcf2cf/mzaf_7717849628751219162.plus.aac.p.m4a';
+    const { getByTestId } = renderWithIntl(<TuneCard previewUrl={songUrl} />);
 
-    const { getByTestId } = renderWithIntl(
-      <TuneCard
-        setCurrentTrack={setCurrentTrackSpy}
-        setIsTrackPlaying={setIsTrackPlayingSpy}
-        isTrackPlaying={isTrackingPlaying}
-      />
-    );
-
-    fireEvent.click(getByTestId('play-pause-btn'));
-
+    fireEvent.click(getByTestId('play-pause-btn'), { onclick: handlePlayPauseSpy() });
     await timeout(500);
+    expect(getByTestId('audio').src).toBe(songUrl);
 
-    expect(setIsTrackPlayingSpy).toBeCalled();
-    expect(setCurrentTrackSpy).toBeCalled();
-  });
-
-  it('should pause/stop currently playing song and call "setCurrentTrack" when a different song is clicked', async () => {
-    const isTrackingPlaying = true;
-    const currentTrack = { pause: jest.fn(), src: '' };
-
-    const { getByTestId } = renderWithIntl(
-      <TuneCard
-        setCurrentTrack={setCurrentTrackSpy}
-        setIsTrackPlaying={setIsTrackPlayingSpy}
-        isTrackPlaying={isTrackingPlaying}
-        currentTrack={currentTrack}
-      />
-    );
-    fireEvent.click(getByTestId('play-pause-btn'));
+    fireEvent.click(getByTestId('play-pause-btn'), { onclick: handlePlayPauseSpy() });
     await timeout(500);
-    expect(setCurrentTrackSpy).toBeCalled();
+    expect(getByTestId('audio').src).not.toBe(songUrl);
   });
 });
