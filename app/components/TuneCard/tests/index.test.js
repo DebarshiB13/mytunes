@@ -17,26 +17,38 @@ describe('<TuneCard />', () => {
     expect(baseElement).toMatchSnapshot();
   });
 
-  it('should call handlePlayPause on Click', async () => {
+  it('should call handlePlayPause && handleOnActionClick on Click', async () => {
     const handlePlayPauseSpy = jest.fn();
-    const { getByTestId } = renderWithIntl(<TuneCard handlePlayPause={handlePlayPauseSpy} />);
+    const handleOnActionClickSpy = jest.fn();
+
+    const { getByTestId } = renderWithIntl(<TuneCard handleOnActionClick={handleOnActionClickSpy} />);
 
     fireEvent.click(getByTestId('play-pause-btn'), { onclick: handlePlayPauseSpy() });
+
     expect(handlePlayPauseSpy).toHaveBeenCalled();
+    expect(handleOnActionClickSpy).toHaveBeenCalled();
   });
 
-  it('should set/unset songsUrl on handlePlayPause call', async () => {
-    const handlePlayPauseSpy = jest.fn();
-    const songUrl =
-      'https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview115/v4/d2/c1/c4/d2c1c496-4001-d10f-bbf6-626eb5bcf2cf/mzaf_7717849628751219162.plus.aac.p.m4a';
-    const { getByTestId } = renderWithIntl(<TuneCard previewUrl={songUrl} />);
+  it('should set/unset audio url on playPause', async () => {
+    const previewUrl = 'https://abc.mp3/';
+    const handleOnActionClickSpy = jest.fn();
+    const { getByTestId } = renderWithIntl(
+      <TuneCard previewUrl={previewUrl} handleOnActionClick={handleOnActionClickSpy} />
+    );
 
-    fireEvent.click(getByTestId('play-pause-btn'), { onclick: handlePlayPauseSpy() });
-    await timeout(500);
-    expect(getByTestId('audio').src).toBe(songUrl);
+    const audioElem = getByTestId('audio');
+    const playPauseButton = getByTestId('play-pause-btn');
 
-    fireEvent.click(getByTestId('play-pause-btn'), { onclick: handlePlayPauseSpy() });
+    expect(audioElem.src).not.toEqual(previewUrl);
+
+    fireEvent.click(playPauseButton);
     await timeout(500);
-    expect(getByTestId('audio').src).not.toBe(songUrl);
+    expect(audioElem.src).toEqual(previewUrl);
+
+    fireEvent.click(playPauseButton);
+    fireEvent.click(playPauseButton);
+
+    await timeout(500);
+    expect(audioElem.src).not.toEqual(previewUrl);
   });
 });

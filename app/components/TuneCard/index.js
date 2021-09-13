@@ -4,7 +4,7 @@
  *
  */
 
-import React, { memo, useState, useRef } from 'react';
+import React, { memo, useState, useRef, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { Card, Typography, Image, Button } from 'antd';
@@ -29,9 +29,15 @@ const IconButton = styled(Button)`
   align-items: center;
 `;
 
-export function TuneCard({ maxwidth, artistName, collectionName, cardImg, previewUrl }) {
-  const [isPlaying, setIsPlaying] = useState(false);
+export function TuneCard({ maxwidth, artistName, collectionName, cardImg, previewUrl, handleOnActionClick }) {
   const audioRef = useRef();
+  const [isPlaying, setIsPlaying] = useState(false);
+
+  useEffect(() => {
+    if (audioRef.current?.paused) {
+      setIsPlaying(false);
+    }
+  });
 
   const handlePlayPause = (url) => {
     if (isPlaying) {
@@ -39,9 +45,9 @@ export function TuneCard({ maxwidth, artistName, collectionName, cardImg, previe
       setIsPlaying(false);
     } else {
       audioRef.current.src = url;
-      audioRef.current.play();
       setIsPlaying(true);
     }
+    handleOnActionClick(audioRef, isPlaying);
   };
 
   return (
@@ -75,8 +81,8 @@ TuneCard.propTypes = {
   collectionName: PropTypes.string,
   cardImg: PropTypes.string,
   previewUrl: PropTypes.string,
-  currentTrack: PropTypes.string,
-  handlePlayPause: PropTypes.func
+  handlePlayPause: PropTypes.func,
+  handleOnActionClick: PropTypes.func
 };
 
 export default memo(TuneCard);

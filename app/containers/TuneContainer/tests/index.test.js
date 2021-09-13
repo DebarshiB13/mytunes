@@ -119,4 +119,24 @@ describe('<TuneContainer /> container tests', () => {
     props.dispatchClearItuneSongs();
     expect(dispatchSpy).toHaveBeenCalledWith(actions.dispatchClearItuneSongsSpy());
   });
+
+  it('should call handleOnActionClickSpy when button is clicked', async () => {
+    const handleOnActionClickSpy = jest.fn();
+    const data = {
+      resultCount: 2,
+      results: [
+        { id: 1, name: 'Some data 1' },
+        { id: 2, name: 'Some another data' }
+      ]
+    };
+    const { getAllByTestId } = renderProvider(<TuneContainer songsData={data} />);
+
+    const buttons = getAllByTestId('play-pause-btn');
+    fireEvent.click(buttons[0], {
+      onclick: handleOnActionClickSpy()
+    });
+
+    await timeout(500);
+    expect(handleOnActionClickSpy).toBeCalled();
+  });
 });

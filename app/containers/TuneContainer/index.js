@@ -22,7 +22,6 @@ import debounce from 'lodash/debounce';
 import T from '@components/T';
 import { TuneCard } from '@components/TuneCard/index';
 import For from '@components/For/index';
-import { map } from 'lodash';
 import If from '@app/components/If/index';
 
 const { Search } = Input;
@@ -63,6 +62,7 @@ export function TuneContainer({
   padding
 }) {
   const [loading, setLoading] = useState(false);
+  const [currentTrack, setCurrentTrack] = useState();
 
   useEffect(() => {
     const loaded = get(songsData, 'results', null) || songsError;
@@ -95,6 +95,19 @@ export function TuneContainer({
     const results = get(songsData, 'results', []);
     const resultCount = get(songsData, 'resultCount', 0);
 
+    const handleOnActionClick = (ref, isPlaying) => {
+      // console.log({ ref });
+      if (!isPlaying) {
+        if (currentTrack && currentTrack.current.src !== ref.current.src) {
+          currentTrack.current.pause();
+        }
+        setCurrentTrack(ref);
+        ref.current.load();
+        ref.current.play();
+      } else {
+        currentTrack?.current?.pause();
+      }
+    };
     return (
       <If condition={results.length !== 0 || loading} otherwise={null}>
         <CustomCard>
@@ -107,14 +120,16 @@ export function TuneContainer({
             </If>
             <For
               ParentComponent={CardRow}
-              of={map(results)}
+              of={results}
               renderItem={(result, index) => (
                 <TuneCard
                   key={index}
+                  handleOnActionClick={handleOnActionClick}
                   artistName={result.artistName}
                   collectionName={result.collectionName}
                   cardImg={result.artworkUrl100}
                   previewUrl={result.previewUrl}
+                  currentTrack={currentTrack}
                 />
               )}
             />
