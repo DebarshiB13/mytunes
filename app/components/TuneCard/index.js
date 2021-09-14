@@ -4,7 +4,7 @@
  *
  */
 
-import React, { memo, useState, useRef, useEffect } from 'react';
+import React, { memo, useRef } from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { Card, Typography, Image, Button } from 'antd';
@@ -31,23 +31,14 @@ const IconButton = styled(Button)`
 
 export function TuneCard({ maxwidth, artistName, collectionName, cardImg, previewUrl, handleOnActionClick }) {
   const audioRef = useRef();
-  const [isPlaying, setIsPlaying] = useState(false);
-
-  useEffect(() => {
-    if (audioRef.current?.paused) {
-      setIsPlaying(false);
-    }
-  });
 
   const handlePlayPause = (url) => {
-    if (isPlaying) {
-      audioRef.current.src = '';
-      setIsPlaying(false);
-    } else {
+    const isPaused = audioRef.current.paused ?? true;
+    if (isPaused) {
       audioRef.current.src = url;
-      setIsPlaying(true);
     }
-    handleOnActionClick(audioRef, isPlaying);
+
+    handleOnActionClick(audioRef);
   };
 
   return (
@@ -62,7 +53,10 @@ export function TuneCard({ maxwidth, artistName, collectionName, cardImg, previe
         data-testid="play-pause-btn"
         onClick={() => handlePlayPause(previewUrl)}
         icon={
-          <If condition={isPlaying} otherwise={<PlayCircleFilled style={iconStyle} />}>
+          <If
+            condition={!audioRef.current?.paused && audioRef.current?.src}
+            otherwise={<PlayCircleFilled style={iconStyle} />}
+          >
             <PauseCircleFilled style={iconStyle} />
           </If>
         }

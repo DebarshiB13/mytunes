@@ -9,6 +9,7 @@ import React from 'react';
 import { renderProvider, timeout } from '@utils/testUtils';
 import { fireEvent } from '@testing-library/dom';
 import { mapDispatchToProps, TuneContainerTest as TuneContainer } from '../index';
+import { tuneContainerTypes } from '../reducer';
 
 describe('<TuneContainer /> container tests', () => {
   let submitSpy;
@@ -43,6 +44,17 @@ describe('<TuneContainer /> container tests', () => {
     expect(getByTestId('error-card')).toBeInTheDocument();
   });
 
+  it('should render 2 card elements', () => {
+    const data = {
+      resultCount: 2,
+      results: [
+        { id: 1, name: 'Some data 1' },
+        { id: 2, name: 'Some another data' }
+      ]
+    };
+    const { getAllByTestId } = renderProvider(<TuneContainer songsData={data} />);
+    expect(getAllByTestId('tune-card').length).toBe(2);
+  });
   it('should render Skeleton Comp when "loading" is true', async () => {
     const searchTerm = 'abc';
 
@@ -103,8 +115,8 @@ describe('<TuneContainer /> container tests', () => {
   it('should match mapDispatchToProps actions', async () => {
     const searchTerm = 'sia';
     const dispatchSpy = jest.fn((fn) => fn);
-    const dispatchItuneSongsSpy = jest.fn(() => ({ type: 'REQUEST_GET_ITUNE_SONGS', searchTerm }));
-    const dispatchClearItuneSongsSpy = jest.fn(() => ({ type: 'CLEAR_ITUNE_SONGS' }));
+    const dispatchItuneSongsSpy = jest.fn(() => ({ type: tuneContainerTypes.REQUEST_GET_ITUNE_SONGS, searchTerm }));
+    const dispatchClearItuneSongsSpy = jest.fn(() => ({ type: tuneContainerTypes.CLEAR_ITUNE_SONGS }));
 
     const props = mapDispatchToProps(dispatchSpy);
 

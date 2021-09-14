@@ -80,7 +80,6 @@ export function TuneContainer({
   }, []);
 
   const handleOnChange = (term) => {
-    // const escapedTerm = term.toLowerCase().replace(/\s+/g, '');
     if (!isEmpty(term)) {
       dispatchItuneSongs(term);
       setLoading(true);
@@ -95,19 +94,24 @@ export function TuneContainer({
     const results = get(songsData, 'results', []);
     const resultCount = get(songsData, 'resultCount', 0);
 
-    const handleOnActionClick = (ref, isPlaying) => {
-      // console.log({ ref });
-      if (!isPlaying) {
-        if (currentTrack && currentTrack.current.src !== ref.current.src) {
+    const handleOnActionClick = (ref) => {
+      if (currentTrack) {
+        if (currentTrack.current.src !== ref.current.src) {
           currentTrack.current.pause();
+          ref.current.play();
+          setCurrentTrack(ref);
+        } else if (!currentTrack.current.paused) {
+          currentTrack.current.pause();
+          setCurrentTrack(null);
+        } else {
+          currentTrack.current.play();
         }
-        setCurrentTrack(ref);
-        ref.current.load();
-        ref.current.play();
       } else {
-        currentTrack?.current?.pause();
+        ref.current.play();
+        setCurrentTrack(ref);
       }
     };
+
     return (
       <If condition={results.length !== 0 || loading} otherwise={null}>
         <CustomCard>
@@ -115,7 +119,7 @@ export function TuneContainer({
             <If condition={searchTerm} otherwise={null}>
               <T id="search_term" values={{ searchTerm }} />
             </If>
-            <If condition={resultCount !== 0}>
+            <If condition={resultCount}>
               <T id="matching_tracks" values={{ resultCount }} />
             </If>
             <For
@@ -123,13 +127,13 @@ export function TuneContainer({
               of={results}
               renderItem={(result, index) => (
                 <TuneCard
+                  data-testid="tune-card"
                   key={index}
                   handleOnActionClick={handleOnActionClick}
                   artistName={result.artistName}
                   collectionName={result.collectionName}
                   cardImg={result.artworkUrl100}
                   previewUrl={result.previewUrl}
-                  currentTrack={currentTrack}
                 />
               )}
             />
