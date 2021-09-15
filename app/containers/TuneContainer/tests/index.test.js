@@ -26,7 +26,7 @@ describe('<TuneContainer /> container tests', () => {
     expect(getByTestId('search-bar')).toBeInTheDocument();
   });
 
-  it('should render for component when songsData is available', () => {
+  it('should render For component when songsData is available', () => {
     const data = {
       resultCount: 2,
       results: [

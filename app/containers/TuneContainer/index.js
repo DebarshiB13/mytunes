@@ -20,9 +20,9 @@ import { Input, Card, Skeleton, Row } from 'antd';
 import styled from 'styled-components';
 import debounce from 'lodash/debounce';
 import T from '@components/T';
-import { TuneCard } from '@components/TuneCard/index';
-import For from '@components/For/index';
-import If from '@app/components/If/index';
+import { TuneCard } from '@components/TuneCard';
+import For from '@components/For';
+import If from '@app/components/If';
 
 const { Search } = Input;
 
@@ -103,7 +103,7 @@ export function TuneContainer({
     };
 
     return (
-      <If condition={results.length !== 0 || loading} otherwise={null}>
+      <If condition={results.length || loading} otherwise={null}>
         <CustomCard>
           <Skeleton loading={loading} active>
             <If condition={searchTerm} otherwise={null}>
