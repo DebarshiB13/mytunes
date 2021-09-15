@@ -80,7 +80,6 @@ TuneCard.propTypes = {
   collectionName: PropTypes.string,
   cardImg: PropTypes.string,
   previewUrl: PropTypes.string,
-  handlePlayPause: PropTypes.func,
   handleOnActionClick: PropTypes.func
 };
 
