@@ -10,14 +10,22 @@ import { renderWithIntl, timeout } from '@utils/testUtils';
 import TuneCard from '../index';
 
 describe('<TuneCard />', () => {
-  it('should render and match the snapshot', () => {
-    const artistName = 'Alan Walker';
-    const collectionName = 'Some Collection';
-    const handleOnActionClickSpy = jest.fn();
-    const previewUrl = 'https://abc.mp3/';
-    const cardImg =
-      'https://is4-ssl.mzstatic.com/image/thumb/Music115/v4/8d/af/2e/8daf2ed5-b5c1-9c53-17fc-a10d7a247121/source/100x100bb.jpg';
+  let artistName;
+  let collectionName;
+  let handleOnActionClickSpy;
+  let previewUrl;
+  let cardImg;
 
+  beforeEach(() => {
+    artistName = 'AlanWalker';
+    collectionName = 'Some Collection';
+    handleOnActionClickSpy = jest.fn();
+    previewUrl = 'https://abc.mp3/';
+    cardImg =
+      'https://is4-ssl.mzstatic.com/image/thumb/Music115/v4/8d/af/2e/8daf2ed5-b5c1-9c53-17fc-a10d7a247121/source/100x100bb.jpg';
+  });
+
+  it('should render and match the snapshot', () => {
     const { baseElement } = renderWithIntl(
       <TuneCard
         artistName={artistName}
@@ -30,56 +38,67 @@ describe('<TuneCard />', () => {
     expect(baseElement).toMatchSnapshot();
   });
 
-  it('should call handlePlayPause && handleOnActionClick on Click', async () => {
-    const handlePlayPauseSpy = jest.fn();
-    const handleOnActionClickSpy = jest.fn();
-
-    const { getByTestId } = renderWithIntl(<TuneCard handleOnActionClick={handleOnActionClickSpy} />);
-
-    fireEvent.click(getByTestId('play-pause-btn'), { onclick: handlePlayPauseSpy() });
-
-    expect(handlePlayPauseSpy).toHaveBeenCalled();
-    expect(handleOnActionClickSpy).toHaveBeenCalled();
-  });
-
-  it('should set audio url on playPause', async () => {
-    const previewUrl = 'https://abc.mp3/';
-    const handleOnActionClickSpy = jest.fn();
-    const { getByTestId } = renderWithIntl(
-      <TuneCard previewUrl={previewUrl} handleOnActionClick={handleOnActionClickSpy} />
+  it('should render and match artistName, collectionName, imgUrl', () => {
+    const { getByText, baseElement, getByTestId } = renderWithIntl(
+      <TuneCard
+        artistName={artistName}
+        collectionName={collectionName}
+        handleOnActionClick={handleOnActionClickSpy}
+        previewUrl={previewUrl}
+        cardImg={cardImg}
+      />
     );
 
-    const audioElem = getByTestId('audio');
-    const playPauseButton = getByTestId('play-pause-btn');
+    expect(getByTestId('artist-name').textContent).toEqual(artistName);
+    expect(getByText(collectionName).textContent).toEqual(collectionName);
+    expect(baseElement.getElementsByClassName('ant-image-img')[0].src).toEqual(cardImg);
+  });
 
-    expect(audioElem.src).not.toEqual(previewUrl);
+  it('should call handlePlayPause && handleOnActionClick on Click', async () => {
+    let audio;
+    const handlePlayPauseSpy = jest.fn(() => {
+      audio.paused = !audio.paused;
+    });
 
-    fireEvent.click(playPauseButton);
+    const { getByTestId } = renderWithIntl(<TuneCard handleOnActionClick={handleOnActionClickSpy} />);
+    audio = getByTestId('audio');
 
+    fireEvent.click(getByTestId('play-pause-btn'), { onclick: handlePlayPauseSpy() });
     await timeout(500);
-    expect(audioElem.src).toEqual(previewUrl);
+
+    const audioArg = handleOnActionClickSpy.mock.calls[0][0];
+
+    expect(handleOnActionClickSpy).toHaveBeenCalledWith(audioArg);
+
+    fireEvent.click(getByTestId('play-pause-btn'), { onclick: handlePlayPauseSpy() });
+    await timeout(500);
+
+    expect(handlePlayPauseSpy).toHaveBeenCalled();
+
+    expect(handleOnActionClickSpy).toHaveBeenCalledWith(audioArg);
   });
 
   it('should pause/unpause audioElement on playPause Click', async () => {
-    const previewUrl = 'https://abc.mp3/';
-    const handleOnActionClickSpy = jest.fn();
+    let audio;
+
+    const handlePlayPauseSpy = jest.fn(() => (audio.paused = !audio.paused));
     const { getByTestId } = renderWithIntl(
       <TuneCard previewUrl={previewUrl} handleOnActionClick={handleOnActionClickSpy} />
     );
 
-    const audioElem = getByTestId('audio');
+    audio = getByTestId('audio');
     const playPauseButton = getByTestId('play-pause-btn');
 
-    expect(audioElem.paused).toBeTruthy;
+    expect(audio.paused).toBeTruthy();
 
-    fireEvent.click(playPauseButton, new MouseEvent('click'));
-
-    await timeout(500);
-    expect(audioElem.paused).toBeFalsy;
-
-    fireEvent.click(playPauseButton, new MouseEvent('click'));
+    fireEvent.click(playPauseButton, { onclick: handlePlayPauseSpy() });
 
     await timeout(500);
-    expect(audioElem.paused).toBeTruthy;
+    expect(audio.paused).toBeFalsy();
+
+    fireEvent.click(playPauseButton, { onclick: handlePlayPauseSpy() });
+
+    await timeout(500);
+    expect(audio.paused).toBeTruthy();
   });
 });

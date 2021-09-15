@@ -13,9 +13,10 @@ exports[`<TuneCard /> should render and match the snapshot 1`] = `
       >
         <h1
           class="ant-typography"
+          data-testid="artist-name"
           style="font-size: 16px;"
         >
-          Alan Walker
+          AlanWalker
         </h1>
         <div
           class="ant-image"
@@ -60,6 +61,7 @@ exports[`<TuneCard /> should render and match the snapshot 1`] = `
         </button>
         <audio
           data-testid="audio"
+          src="https://abc.mp3/"
         />
       </div>
     </div>

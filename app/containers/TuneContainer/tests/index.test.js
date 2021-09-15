@@ -132,23 +132,43 @@ describe('<TuneContainer /> container tests', () => {
     expect(dispatchSpy).toHaveBeenCalledWith(actions.dispatchClearItuneSongsSpy());
   });
 
-  it('should call handleOnActionClickSpy when button is clicked', async () => {
-    const handleOnActionClickSpy = jest.fn();
+  it('should should pause previous audio when new audio is played', async () => {
     const data = {
       resultCount: 2,
       results: [
-        { id: 1, name: 'Some data 1' },
-        { id: 2, name: 'Some another data' }
+        { id: 1, name: 'Some data 1', previewUrl: 'https://abc1.com' },
+        { id: 2, name: 'Some another data', previewUrl: 'https://abc3.com' }
       ]
     };
+    let audios = new Array(data.resultCount);
+    let current;
+
+    const handleOnActionClickSpy = jest.fn((elem) => {
+      if (current && current?.src !== elem.src) {
+        current.paused = true;
+      }
+      current = elem;
+      current.paused = !elem.paused;
+    });
+
     const { getAllByTestId } = renderProvider(<TuneContainer songsData={data} />);
 
     const buttons = getAllByTestId('play-pause-btn');
-    fireEvent.click(buttons[0], {
-      onclick: handleOnActionClickSpy()
-    });
+    audios[0] = getAllByTestId('audio')[0];
+    audios[1] = getAllByTestId('audio')[1];
+
+    expect(audios[0].paused).toBeTruthy();
+    expect(audios[1].paused).toBeTruthy();
+
+    fireEvent.click(buttons[0], { onclick: handleOnActionClickSpy(audios[0]) });
 
     await timeout(500);
-    expect(handleOnActionClickSpy).toBeCalled();
+    expect(audios[0].paused).toBeFalsy();
+
+    fireEvent.click(buttons[1], { onclick: handleOnActionClickSpy(audios[1]) });
+
+    await timeout(500);
+    expect(audios[0].paused).toBeTruthy();
+    expect(audios[1].paused).toBeFalsy();
   });
 });

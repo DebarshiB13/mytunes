@@ -4,7 +4,7 @@
  *
  */
 
-import React, { memo, useRef } from 'react';
+import React, { memo, useRef, useState } from 'react';
 import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { Card, Typography, Image, Button } from 'antd';
@@ -31,19 +31,24 @@ const IconButton = styled(Button)`
 
 export function TuneCard({ maxwidth, artistName, collectionName, cardImg, previewUrl, handleOnActionClick }) {
   const audioRef = useRef();
+  const [play, setPlay] = useState(false);
 
-  const handlePlayPause = (url) => {
-    const isPaused = audioRef.current.paused ?? true;
+  const handlePlayPause = () => {
+    const isPaused = audioRef.current.paused;
     if (isPaused) {
-      audioRef.current.src = url;
+      audioRef.current.play();
+    } else {
+      audioRef.current.pause();
     }
-
+    setPlay(!play);
     handleOnActionClick(audioRef);
   };
 
   return (
     <ItemCard maxwidth={maxwidth} data-testid="tune-card">
-      <Typography.Title style={{ fontSize: 16 }}>{artistName}</Typography.Title>
+      <Typography.Title style={{ fontSize: 16 }} data-testid="artist-name">
+        {artistName}
+      </Typography.Title>
       <Image src={cardImg} width="100%" preview={false} />
       <Typography.Paragraph style={{ fontSize: 18 }}>{collectionName}</Typography.Paragraph>
 
@@ -51,7 +56,7 @@ export function TuneCard({ maxwidth, artistName, collectionName, cardImg, previe
         shape="circle"
         type="text"
         data-testid="play-pause-btn"
-        onClick={() => handlePlayPause(previewUrl)}
+        onClick={handlePlayPause}
         icon={
           <If
             condition={!audioRef.current?.paused && audioRef.current?.src}
@@ -61,7 +66,7 @@ export function TuneCard({ maxwidth, artistName, collectionName, cardImg, previe
           </If>
         }
       />
-      <audio ref={audioRef} data-testid="audio"></audio>
+      <audio ref={audioRef} data-testid="audio" src={previewUrl}></audio>
     </ItemCard>
   );
 }

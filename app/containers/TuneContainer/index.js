@@ -62,7 +62,7 @@ export function TuneContainer({
   padding
 }) {
   const [loading, setLoading] = useState(false);
-  const [currentTrack, setCurrentTrack] = useState();
+  const [currentTrack, setCurrentTrack] = useState(null);
 
   useEffect(() => {
     const loaded = get(songsData, 'results', null) || songsError;
@@ -95,20 +95,10 @@ export function TuneContainer({
     const resultCount = get(songsData, 'resultCount', 0);
 
     const handleOnActionClick = (ref) => {
-      if (currentTrack) {
-        if (currentTrack.current.src !== ref.current.src) {
-          currentTrack.current.pause();
-          ref.current.play();
-          setCurrentTrack(ref);
-        } else if (!currentTrack.current.paused) {
-          currentTrack.current.pause();
-          setCurrentTrack(null);
-        } else {
-          currentTrack.current.play();
-        }
-      } else {
-        ref.current.play();
-        setCurrentTrack(ref);
+      setCurrentTrack(ref);
+      const isPaused = currentTrack?.current?.paused;
+      if (!isPaused && ref?.current.src !== currentTrack?.current?.src) {
+        currentTrack?.current.pause();
       }
     };
 

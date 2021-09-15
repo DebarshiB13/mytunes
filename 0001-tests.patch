@@ -1,0 +1,140 @@
+From 1217055b0dfd9eda3418496633d92fce76b4dc00 Mon Sep 17 00:00:00 2001
+From: Mac <mohammed.ali.chherawalla@gmail.com>
+Date: Tue, 14 Sep 2021 19:19:04 +0530
+Subject: [PATCH] tests
+
+---
+ app/components/TuneCard/index.js            | 10 +++++++---
+ app/components/TuneCard/tests/index.test.js | 11 ++++++++++-
+ app/containers/TuneContainer/index.js       | 20 +++++---------------
+ jest.setup.js                               | 17 +++++++++++++++++
+ 4 files changed, 39 insertions(+), 19 deletions(-)
+
+diff --git a/app/components/TuneCard/index.js b/app/components/TuneCard/index.js
+index 66f86d2..e11d4df 100644
+--- a/app/components/TuneCard/index.js
++++ b/app/components/TuneCard/index.js
+@@ -4,7 +4,7 @@
+  *
+  */
+ 
+-import React, { memo, useRef } from 'react';
++import React, { memo, useRef, useState } from 'react';
+ import PropTypes from 'prop-types';
+ import styled from 'styled-components';
+ import { Card, Typography, Image, Button } from 'antd';
+@@ -31,13 +31,17 @@ const IconButton = styled(Button)`
+ 
+ export function TuneCard({ maxwidth, artistName, collectionName, cardImg, previewUrl, handleOnActionClick }) {
+   const audioRef = useRef();
++  const [play, setPlay] = useState(false);
+ 
+   const handlePlayPause = (url) => {
+-    const isPaused = audioRef.current.paused ?? true;
++    const isPaused = audioRef.current.paused;
+     if (isPaused) {
+       audioRef.current.src = url;
++      audioRef.current.play();
++    } else {
++      audioRef.current.pause();
+     }
+-
++    setPlay(!play);
+     handleOnActionClick(audioRef);
+   };
+ 
+diff --git a/app/components/TuneCard/tests/index.test.js b/app/components/TuneCard/tests/index.test.js
+index a81439d..853aa67 100644
+--- a/app/components/TuneCard/tests/index.test.js
++++ b/app/components/TuneCard/tests/index.test.js
+@@ -31,14 +31,23 @@ describe('<TuneCard />', () => {
+   });
+ 
+   it('should call handlePlayPause && handleOnActionClick on Click', async () => {
+-    const handlePlayPauseSpy = jest.fn();
++    let audio;
++    const handlePlayPauseSpy = jest.fn(() => {
++      audio.paused = !audio.paused;
++    });
+     const handleOnActionClickSpy = jest.fn();
+ 
+     const { getByTestId } = renderWithIntl(<TuneCard handleOnActionClick={handleOnActionClickSpy} />);
++    audio = getByTestId('audio');
+ 
+     fireEvent.click(getByTestId('play-pause-btn'), { onclick: handlePlayPauseSpy() });
++    await timeout(500);
++    expect(handleOnActionClickSpy).toHaveBeenCalled();
++    fireEvent.click(getByTestId('play-pause-btn'), { onclick: handlePlayPauseSpy() });
++    await timeout(500);
+ 
+     expect(handlePlayPauseSpy).toHaveBeenCalled();
++
+     expect(handleOnActionClickSpy).toHaveBeenCalled();
+   });
+ 
+diff --git a/app/containers/TuneContainer/index.js b/app/containers/TuneContainer/index.js
+index f7aeb97..7674b7b 100644
+--- a/app/containers/TuneContainer/index.js
++++ b/app/containers/TuneContainer/index.js
+@@ -62,7 +62,7 @@ export function TuneContainer({
+   padding
+ }) {
+   const [loading, setLoading] = useState(false);
+-  const [currentTrack, setCurrentTrack] = useState();
++  const [currentTrack, setCurrentTrack] = useState(null);
+ 
+   useEffect(() => {
+     const loaded = get(songsData, 'results', null) || songsError;
+@@ -95,20 +95,10 @@ export function TuneContainer({
+     const resultCount = get(songsData, 'resultCount', 0);
+ 
+     const handleOnActionClick = (ref) => {
+-      if (currentTrack) {
+-        if (currentTrack.current.src !== ref.current.src) {
+-          currentTrack.current.pause();
+-          ref.current.play();
+-          setCurrentTrack(ref);
+-        } else if (!currentTrack.current.paused) {
+-          currentTrack.current.pause();
+-          setCurrentTrack(null);
+-        } else {
+-          currentTrack.current.play();
+-        }
+-      } else {
+-        ref.current.play();
+-        setCurrentTrack(ref);
++      setCurrentTrack(ref);
++      const isPaused = currentTrack?.current?.paused;
++      if (!isPaused && ref?.current.src !== currentTrack?.current?.src) {
++        currentTrack.current.pause();
+       }
+     };
+ 
+diff --git a/jest.setup.js b/jest.setup.js
+index 2f8ca37..c9589c6 100644
+--- a/jest.setup.js
++++ b/jest.setup.js
+@@ -32,3 +32,20 @@ Object.defineProperty(window, 'matchMedia', {
+     };
+   })
+ });
++
++Object.defineProperty(window.HTMLMediaElement.prototype, 'paused', {
++  writable: true,
++  value: true
++});
++window.HTMLMediaElement.prototype.load = () => {
++  /* do nothing */
++};
++window.HTMLMediaElement.prototype.play = () => {
++  /* do nothing */
++};
++window.HTMLMediaElement.prototype.pause = () => {
++  /* do nothing */
++};
++window.HTMLMediaElement.prototype.addTextTrack = () => {
++  /* do nothing */
++};
+-- 
+2.24.3 (Apple Git-128)
+
