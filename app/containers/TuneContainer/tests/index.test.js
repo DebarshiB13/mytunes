@@ -132,7 +132,7 @@ describe('<TuneContainer /> container tests', () => {
     expect(dispatchSpy).toHaveBeenCalledWith(actions.dispatchClearItuneSongsSpy());
   });
 
-  it('should should pause previous audio when new audio is played', async () => {
+  it('should pause previous audio when new audio is played', async () => {
     const data = {
       resultCount: 2,
       results: [
@@ -140,7 +140,8 @@ describe('<TuneContainer /> container tests', () => {
         { id: 2, name: 'Some another data', previewUrl: 'https://abc3.com' }
       ]
     };
-    let audios = new Array(data.resultCount);
+    const audios = new Array(data.resultCount);
+
     let current;
 
     const handleOnActionClickSpy = jest.fn((elem) => {
