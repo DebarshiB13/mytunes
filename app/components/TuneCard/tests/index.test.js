@@ -66,16 +66,14 @@ describe('<TuneCard />', () => {
     fireEvent.click(getByTestId('play-pause-btn'), { onclick: handlePlayPauseSpy() });
     await timeout(500);
 
-    const audioArg = handleOnActionClickSpy.mock.calls[0][0];
-
-    expect(handleOnActionClickSpy).toHaveBeenCalledWith(audioArg);
+    expect(handleOnActionClickSpy).toHaveBeenCalledWith({ current: audio });
 
     fireEvent.click(getByTestId('play-pause-btn'), { onclick: handlePlayPauseSpy() });
     await timeout(500);
 
     expect(handlePlayPauseSpy).toHaveBeenCalled();
 
-    expect(handleOnActionClickSpy).toHaveBeenCalledWith(audioArg);
+    expect(handleOnActionClickSpy).toHaveBeenCalledWith({ current: audio });
   });
 
   it('should pause/unpause audioElement on playPause Click', async () => {
