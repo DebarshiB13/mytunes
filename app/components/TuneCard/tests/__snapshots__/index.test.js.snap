@@ -12,9 +12,9 @@ exports[`<TuneCard /> should render and match the snapshot 1`] = `
         class="ant-card-body"
       >
         <h1
-          class="ant-typography"
+          class="ant-typography TuneCard__StyledT-sc-1cl6pnu-2 FOrUM"
           data-testid="artist-name"
-          style="font-size: 16px;"
+          font-size="16"
         >
           AlanWalker
         </h1>
@@ -27,12 +27,12 @@ exports[`<TuneCard /> should render and match the snapshot 1`] = `
             src="https://is4-ssl.mzstatic.com/image/thumb/Music115/v4/8d/af/2e/8daf2ed5-b5c1-9c53-17fc-a10d7a247121/source/100x100bb.jpg"
           />
         </div>
-        <div
-          class="ant-typography"
-          style="font-size: 18px;"
+        <h1
+          class="ant-typography TuneCard__StyledT-sc-1cl6pnu-2 EPPJu"
+          font-size="18"
         >
           Some Collection
-        </div>
+        </h1>
         <button
           class="ant-btn ant-btn-text ant-btn-circle ant-btn-icon-only TuneCard__IconButton-sc-1cl6pnu-1 eaTgBZ"
           data-testid="play-pause-btn"

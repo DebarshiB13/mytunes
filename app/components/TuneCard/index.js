@@ -11,6 +11,8 @@ import { Card, Typography, Image, Button } from 'antd';
 import { PlayCircleFilled, PauseCircleFilled } from '@ant-design/icons';
 import If from '@components/If';
 
+const { Title } = Typography;
+
 const ItemCard = styled(Card)`
   && {
     margin: 20px 0;
@@ -27,6 +29,12 @@ const IconButton = styled(Button)`
   display: flex;
   justify-content: center;
   align-items: center;
+`;
+
+const StyledT = styled(Title)`
+  && {
+    font-size: ${(props) => props.fontSize};
+  }
 `;
 
 export function TuneCard({ maxwidth, artistName, collectionName, cardImg, previewUrl, handleOnActionClick }) {
@@ -46,11 +54,11 @@ export function TuneCard({ maxwidth, artistName, collectionName, cardImg, previe
 
   return (
     <ItemCard maxwidth={maxwidth} data-testid="tune-card">
-      <Typography.Title style={{ fontSize: 16 }} data-testid="artist-name">
+      <StyledT fontSize={16} data-testid="artist-name">
         {artistName}
-      </Typography.Title>
+      </StyledT>
       <Image src={cardImg} width="100%" preview={false} />
-      <Typography.Paragraph style={{ fontSize: 18 }}>{collectionName}</Typography.Paragraph>
+      <StyledT fontSize={18}>{collectionName}</StyledT>
 
       <IconButton
         shape="circle"
