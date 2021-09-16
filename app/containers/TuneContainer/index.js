@@ -124,6 +124,7 @@ export function TuneContainer({
                   collectionName={result.collectionName}
                   cardImg={result.artworkUrl100}
                   previewUrl={result.previewUrl}
+                  songId={result.trackId}
                 />
               )}
             />

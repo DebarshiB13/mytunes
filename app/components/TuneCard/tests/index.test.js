@@ -99,4 +99,16 @@ describe('<TuneCard />', () => {
     await timeout(500);
     expect(audio.paused).toBeTruthy();
   });
+
+  it('should call handlePausePlay but not handleOnActionClick when handleOnActionClick is not passed as prop', () => {
+    const handlePlayPauseSpy = jest.fn();
+    const { getByTestId } = renderWithIntl(<TuneCard previewUrl={previewUrl} />);
+
+    const playPauseButton = getByTestId('play-pause-btn');
+
+    fireEvent.click(playPauseButton, { onclick: handlePlayPauseSpy() });
+
+    expect(handlePlayPauseSpy).toBeCalled();
+    expect(handleOnActionClickSpy).not.toBeCalled();
+  });
 });

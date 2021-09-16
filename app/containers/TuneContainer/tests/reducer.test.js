@@ -59,4 +59,44 @@ describe('TuneContainer reducer tests', () => {
       })
     ).toEqual(expectedResult);
   });
+
+  it('should return the state when an action of type FETCH_TRACK_DETAILS is dispatched', () => {
+    const songId = '918556408';
+    const expectedResult = { ...state, songId };
+
+    expect(
+      tuneContainerReducer(state, {
+        type: tuneContainerTypes.REQUEST_GET_TRACK_DETAILS,
+        songId
+      })
+    ).toEqual(expectedResult);
+  });
+
+  it('should ensure that the trackDetails is present when FETCH_TRACK_DETAILS_SUCCESS is dispatched', () => {
+    const songId = '12212';
+    const data = { name: 'Sia' };
+    const tracksCache = { [songId]: data };
+    state = { ...state, songId };
+    const expectedResult = { ...state, trackDetails: data, tracksCache };
+
+    expect(
+      tuneContainerReducer(state, {
+        type: tuneContainerTypes.SUCCESS_GET_TRACK_DETAILS,
+        data
+      })
+    ).toEqual(expectedResult);
+  });
+
+  it('should ensure that the trackDetails is not present & trackError is present when FETCH_TRACK_DETAILS_FAILED is dispatched', () => {
+    const error = translate('something_went_wrong');
+
+    const expectedResult = { ...state, trackError: error };
+
+    expect(
+      tuneContainerReducer(state, {
+        type: tuneContainerTypes.FAILURE_GET_TRACK_DETAILS,
+        error
+      })
+    ).toEqual(expectedResult);
+  });
 });

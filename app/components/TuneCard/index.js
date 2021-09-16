@@ -10,6 +10,7 @@ import styled from 'styled-components';
 import { Card, Typography, Image, Button } from 'antd';
 import { PlayCircleFilled, PauseCircleFilled } from '@ant-design/icons';
 import If from '@components/If';
+import { Link } from 'react-router-dom';
 
 const { Title } = Typography;
 
@@ -33,11 +34,11 @@ const IconButton = styled(Button)`
 
 const StyledT = styled(Title)`
   && {
-    font-size: ${(props) => props.fontSize};
+    font-size: ${(props) => props.fontSize}em;
   }
 `;
 
-export function TuneCard({ maxwidth, artistName, collectionName, cardImg, previewUrl, handleOnActionClick }) {
+export function TuneCard({ maxwidth, artistName, collectionName, cardImg, previewUrl, handleOnActionClick, songId }) {
   const audioRef = useRef();
   const [play, setPlay] = useState(false);
 
@@ -49,16 +50,22 @@ export function TuneCard({ maxwidth, artistName, collectionName, cardImg, previe
       audioRef.current.pause();
     }
     setPlay(!play);
-    handleOnActionClick(audioRef);
+    if (handleOnActionClick) {
+      handleOnActionClick(audioRef);
+    }
   };
 
   return (
     <ItemCard maxwidth={maxwidth} data-testid="tune-card">
-      <StyledT fontSize={16} data-testid="artist-name">
+      <StyledT fontSize={1.6} data-testid="artist-name">
         {artistName}
       </StyledT>
-      <Image src={cardImg} width="100%" preview={false} />
-      <StyledT fontSize={18}>{collectionName}</StyledT>
+      <If condition={songId} otherwise={<Image src={cardImg} width="100%" preview={false} />}>
+        <Link to={`/songs/${songId}`}>
+          <Image src={cardImg} width="100%" preview={false} />
+        </Link>
+      </If>
+      <StyledT fontSize={1.2}>{collectionName}</StyledT>
 
       <IconButton
         shape="circle"
@@ -88,7 +95,8 @@ TuneCard.propTypes = {
   collectionName: PropTypes.string,
   cardImg: PropTypes.string,
   previewUrl: PropTypes.string,
-  handleOnActionClick: PropTypes.func
+  handleOnActionClick: PropTypes.func,
+  songId: PropTypes.string
 };
 
 export default memo(TuneCard);

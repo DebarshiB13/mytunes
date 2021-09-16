@@ -6,7 +6,7 @@
  */
 
 import React from 'react';
-import { renderProvider, timeout } from '@utils/testUtils';
+import { renderProvider, timeout, renderWithIntl } from '@utils/testUtils';
 import { fireEvent } from '@testing-library/dom';
 import { mapDispatchToProps, TuneContainerTest as TuneContainer } from '../index';
 import { tuneContainerTypes } from '../reducer';
@@ -34,7 +34,7 @@ describe('<TuneContainer /> container tests', () => {
         { id: 2, name: 'Some another data' }
       ]
     };
-    const { getByTestId } = renderProvider(<TuneContainer songsData={data} />);
+    const { getByTestId } = renderWithIntl(<TuneContainer songsData={data} />);
     expect(getByTestId('for')).toBeInTheDocument();
   });
 
@@ -52,7 +52,7 @@ describe('<TuneContainer /> container tests', () => {
         { id: 2, name: 'Some another data' }
       ]
     };
-    const { getAllByTestId } = renderProvider(<TuneContainer songsData={data} />);
+    const { getAllByTestId } = renderWithIntl(<TuneContainer songsData={data} />);
     expect(getAllByTestId('tune-card').length).toBe(2);
   });
   it('should render Skeleton Comp when "loading" is true', async () => {
@@ -152,7 +152,7 @@ describe('<TuneContainer /> container tests', () => {
       current.paused = !elem.paused;
     });
 
-    const { getAllByTestId } = renderProvider(<TuneContainer songsData={data} />);
+    const { getAllByTestId } = renderWithIntl(<TuneContainer songsData={data} />);
 
     const buttons = getAllByTestId('play-pause-btn');
     audios[0] = getAllByTestId('audio')[0];

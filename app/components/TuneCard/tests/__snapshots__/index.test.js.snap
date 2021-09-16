@@ -12,9 +12,9 @@ exports[`<TuneCard /> should render and match the snapshot 1`] = `
         class="ant-card-body"
       >
         <h1
-          class="ant-typography TuneCard__StyledT-sc-1cl6pnu-2 FOrUM"
+          class="ant-typography TuneCard__StyledT-sc-1cl6pnu-2 eJcBSi"
           data-testid="artist-name"
-          font-size="16"
+          font-size="1.6"
         >
           AlanWalker
         </h1>
@@ -28,8 +28,8 @@ exports[`<TuneCard /> should render and match the snapshot 1`] = `
           />
         </div>
         <h1
-          class="ant-typography TuneCard__StyledT-sc-1cl6pnu-2 EPPJu"
-          font-size="18"
+          class="ant-typography TuneCard__StyledT-sc-1cl6pnu-2 hVdOjy"
+          font-size="1.2"
         >
           Some Collection
         </h1>

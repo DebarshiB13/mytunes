@@ -1,6 +1,6 @@
 import MockAdapter from 'axios-mock-adapter';
 import { getApiClient } from '@utils/apiUtils';
-import { getRepos, getSongs } from '../repoApi';
+import { getRepos, getSongDetails, getSongs } from '../repoApi';
 
 describe('RepoApi tests', () => {
   const repositoryName = 'mac';
@@ -30,6 +30,18 @@ describe('SongApi tests', () => {
     ];
     mock.onGet(`/search?term=${searchTerm}`).reply(200, data);
     const res = await getSongs(searchTerm);
+    expect(res.data).toEqual(data);
+  });
+
+  it('songDetails Api should make the api call to "/lookup/id="', async () => {
+    const songId = '12112';
+    const mock = new MockAdapter(getApiClient('itunes').axiosInstance);
+    const data = {
+      songId
+    };
+
+    mock.onGet(`/lookup?id=${songId}`).reply(200, data);
+    const res = await getSongDetails(songId);
     expect(res.data).toEqual(data);
   });
 });
