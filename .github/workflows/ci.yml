@@ -6,7 +6,7 @@ on:
       - feat/itunes-trackdetails
 jobs:
   build-and-test:
-    name: Build
+    name: Build & Test
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -15,7 +15,7 @@ jobs:
       - uses: actions/checkout@v1
 
       - name: Use NodeJS ${{matrix.node-version}}
-      - uses: actions/setup-node@v1
+        uses: actions/setup-node@v1
         with:
           node-version: ${{maxtrix.node-version}}
 
