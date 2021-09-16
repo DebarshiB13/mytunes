@@ -17,7 +17,7 @@ jobs:
       - name: Use NodeJS ${{matrix.node-version}}
         uses: actions/setup-node@v1
         with:
-          node-version: ${{maxtrix.node-version}}
+          node-version: ${{matrix.node-version}}
 
       - name: Install dependencies
         run: yarn
