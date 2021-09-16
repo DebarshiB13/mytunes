@@ -1,7 +1,9 @@
 name: React Template CI Test
 on:
   pull_request:
-    branches: [master, feat/itunes-trackdetails]
+    branches:
+      - master
+      - feat/itunes-trackdetails
 jobs:
   build-and-test:
     name: Build
