@@ -9,10 +9,7 @@ import PropTypes from 'prop-types';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { injectIntl } from 'react-intl';
-import { tuneContainerCreators } from '../reducer';
-import { selectTrackDetails, selectTrackError, selectTuneContainer } from '../selectors';
 import { injectSaga } from 'redux-injectors';
-import tuneContainerSaga from '../saga';
 import { useParams } from 'react-router';
 import { createStructuredSelector } from 'reselect';
 import styled from 'styled-components';
@@ -20,6 +17,9 @@ import { Card, Skeleton } from 'antd';
 import { TuneCard } from '@components/TuneCard';
 import If from '@components/If';
 import T from '@components/T';
+import { tuneContainerCreators } from '../reducer';
+import { selectTrackDetails, selectTrackError, selectTuneContainer } from '../selectors';
+import tuneContainerSaga from '../saga';
 
 const Container = styled.div`
   && {
@@ -67,7 +67,6 @@ function TrackDetailContainer({ dispatchGetTrackDetails, trackDetails, trackErro
             }
           >
             <TuneCard
-              key="hello-world"
               data-testid="tune-card"
               artistName={trackDetails?.artistName}
               collectionName={trackDetails?.collectionName}

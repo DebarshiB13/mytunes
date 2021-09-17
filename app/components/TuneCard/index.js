@@ -30,6 +30,7 @@ const IconButton = styled(Button)`
   display: flex;
   justify-content: center;
   align-items: center;
+  position: relative;
 `;
 
 const StyledT = styled(Title)`
@@ -42,7 +43,8 @@ export function TuneCard({ maxwidth, artistName, collectionName, cardImg, previe
   const audioRef = useRef();
   const [play, setPlay] = useState(false);
 
-  const handlePlayPause = () => {
+  const handlePlayPause = (e) => {
+    e.preventDefault();
     const isPaused = audioRef.current.paused;
     if (isPaused) {
       audioRef.current.play();
@@ -56,33 +58,31 @@ export function TuneCard({ maxwidth, artistName, collectionName, cardImg, previe
   };
 
   return (
-    <ItemCard maxwidth={maxwidth} data-testid="tune-card">
-      <StyledT fontSize={1.6} data-testid="artist-name">
-        {artistName}
-      </StyledT>
-      <If condition={songId} otherwise={<Image src={cardImg} width="100%" preview={false} />}>
-        <Link to={`/songs/${songId}`}>
-          <Image src={cardImg} width="100%" preview={false} />
-        </Link>
-      </If>
-      <StyledT fontSize={1.2}>{collectionName}</StyledT>
+    <Link to={`/details/${songId}`}>
+      <ItemCard maxwidth={maxwidth} data-testid="tune-card">
+        <StyledT fontSize={1.6} data-testid="artist-name">
+          {artistName}
+        </StyledT>
+        <Image src={cardImg} width="100%" preview={false} />
+        <StyledT fontSize={1.2}>{collectionName}</StyledT>
 
-      <IconButton
-        shape="circle"
-        type="text"
-        data-testid="play-pause-btn"
-        onClick={handlePlayPause}
-        icon={
-          <If
-            condition={!audioRef.current?.paused && audioRef.current?.src}
-            otherwise={<PlayCircleFilled style={iconStyle} />}
-          >
-            <PauseCircleFilled style={iconStyle} />
-          </If>
-        }
-      />
-      <audio ref={audioRef} data-testid="audio" src={previewUrl}></audio>
-    </ItemCard>
+        <IconButton
+          shape="circle"
+          type="text"
+          data-testid="play-pause-btn"
+          onClick={handlePlayPause}
+          icon={
+            <If
+              condition={!audioRef.current?.paused && audioRef.current?.src}
+              otherwise={<PlayCircleFilled style={iconStyle} />}
+            >
+              <PauseCircleFilled style={iconStyle} />
+            </If>
+          }
+        />
+        <audio ref={audioRef} data-testid="audio" src={previewUrl}></audio>
+      </ItemCard>
+    </Link>
   );
 }
 

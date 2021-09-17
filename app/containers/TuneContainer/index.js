@@ -10,9 +10,6 @@ import { connect } from 'react-redux';
 import { injectIntl } from 'react-intl';
 import { createStructuredSelector } from 'reselect';
 import { compose } from 'redux';
-import selectTuneContainer, { selectSearchTerm, selectSongsData, selectSongsError } from './selectors';
-import { tuneContainerCreators } from './reducer';
-import tuneContainerSaga from './saga';
 import { injectSaga } from 'redux-injectors';
 import get from 'lodash/get';
 import isEmpty from 'lodash/isEmpty';
@@ -23,6 +20,9 @@ import T from '@components/T';
 import { TuneCard } from '@components/TuneCard';
 import For from '@components/For';
 import If from '@app/components/If';
+import selectTuneContainer, { selectSearchTerm, selectSongsData, selectSongsError } from './selectors';
+import { tuneContainerCreators } from './reducer';
+import tuneContainerSaga from './saga';
 
 const { Search } = Input;
 

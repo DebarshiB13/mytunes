@@ -66,9 +66,9 @@ describe('TuneContainer saga tests', () => {
   it('should ensure that the action SUCCESS_GET_TRACK_DETAILS is dispatched when the api call succeeds', () => {
     getTrackDetailsGenerator = getTrackDetails({ songId });
     getTrackDetailsGenerator.next().value;
-    const res2 = getTrackDetailsGenerator.next().value;
+    const resTwo = getTrackDetailsGenerator.next().value;
 
-    expect(res2).toEqual(call(getSongDetails, songId));
+    expect(resTwo).toEqual(call(getSongDetails, songId));
 
     const data = { results: [{ songId }] };
 
@@ -80,12 +80,12 @@ describe('TuneContainer saga tests', () => {
     );
   });
 
-  it('should ensure that the action FAILURE_GET_TRACK_DETAILS is dispatched when the api call succeeds', () => {
+  it('should ensure that the action FAILURE_GET_TRACK_DETAILS is dispatched when the api call fails', () => {
     getTrackDetailsGenerator = getTrackDetails({ songId });
     getTrackDetailsGenerator.next().value;
-    const res2 = getTrackDetailsGenerator.next().value;
+    const resTwo = getTrackDetailsGenerator.next().value;
 
-    expect(res2).toEqual(call(getSongDetails, songId));
+    expect(resTwo).toEqual(call(getSongDetails, songId));
     const error = translate('something_went_wrong');
 
     expect(getTrackDetailsGenerator.next(apiResponseGenerator(false, error)).value).toEqual(
@@ -97,14 +97,13 @@ describe('TuneContainer saga tests', () => {
   });
 
   it('should ensure that songsData is selected and SUCCESS_GET_TRACK_DETAILS is dispatched when songsData contains the trackId', () => {
-    getTrackDetailsGenerator = getTrackDetails({ songId, testData: songsData });
+    getTrackDetailsGenerator = getTrackDetails({ songId, testSongData: songsData });
     const res = getTrackDetailsGenerator.next().value;
 
-    const item = songsData.results.find((_song) => _song.trackId === songId);
     expect(res).toEqual(
       put({
         type: tuneContainerTypes.SUCCESS_GET_TRACK_DETAILS,
-        data: item
+        data: songsData.results[0]
       })
     );
   });

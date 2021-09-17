@@ -50,7 +50,7 @@ describe('TuneContainer reducer tests', () => {
     ).toEqual(expectedResult);
   });
 
-  it('should ensure that the songData is empty when CLEAR_SONG is dispatched', () => {
+  it('should ensure that songsData is empty when CLEAR_SONG is dispatched', () => {
     const expectedResult = { ...state, songsData: [] };
     expect(
       tuneContainerReducer(state, {
@@ -60,7 +60,7 @@ describe('TuneContainer reducer tests', () => {
     ).toEqual(expectedResult);
   });
 
-  it('should return the state when an action of type FETCH_TRACK_DETAILS is dispatched', () => {
+  it('should update the state with songId when an action of type FETCH_TRACK_DETAILS is dispatched', () => {
     const songId = '918556408';
     const expectedResult = { ...state, songId };
 
@@ -72,7 +72,7 @@ describe('TuneContainer reducer tests', () => {
     ).toEqual(expectedResult);
   });
 
-  it('should ensure that the trackDetails is present when FETCH_TRACK_DETAILS_SUCCESS is dispatched', () => {
+  it('should ensure that the trackDetails is set when FETCH_TRACK_DETAILS_SUCCESS is dispatched', () => {
     const songId = '12212';
     const data = { name: 'Sia' };
     state = { ...state, songId };
@@ -86,7 +86,7 @@ describe('TuneContainer reducer tests', () => {
     ).toEqual(expectedResult);
   });
 
-  it('should ensure that the trackDetails is not present & trackError is present when FETCH_TRACK_DETAILS_FAILED is dispatched', () => {
+  it('should ensure that trackDetails empty & trackError is set when FETCH_TRACK_DETAILS_FAILED is dispatched', () => {
     const error = translate('something_went_wrong');
 
     const expectedResult = { ...state, trackError: error };

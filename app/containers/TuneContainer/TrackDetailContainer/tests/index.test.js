@@ -5,7 +5,6 @@
  */
 
 import React from 'react';
-// import { fireEvent } from '@testing-library/dom'
 import { renderWithIntl, timeout } from '@utils/testUtils';
 import { mapDispatchToProps, TrackDetailContainerTest as TrackDetailContainer } from '../index';
 import { tuneContainerTypes } from '../../reducer';
@@ -40,14 +39,14 @@ describe('<TrackDetailContainer />', () => {
     expect(getByTestId('track-detail-error')).toBeInTheDocument();
   });
 
-  it('should render TuneCard trackDetails is not empty', () => {
+  it('should render TuneCard when trackDetails is not empty', () => {
     const { getByTestId } = renderWithIntl(
       <TrackDetailContainer dispatchGetTrackDetails={submitSpy} trackDetails={trackDetails} />
     );
     expect(getByTestId('tune-card')).toBeInTheDocument();
   });
 
-  it('should dispatch when FETCH_TRACK_DETAILS on mount', async () => {
+  it('should dispatch FETCH_TRACK_DETAILS on mount', async () => {
     renderWithIntl(<TrackDetailContainer dispatchGetTrackDetails={submitSpy} />);
 
     await timeout(500);

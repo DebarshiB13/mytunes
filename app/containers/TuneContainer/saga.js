@@ -22,18 +22,18 @@ export function* getItuneSongs(action) {
 
 export function* getTrackDetails(action) {
   let songsData;
-  if (action.testData) {
-    songsData = action.testData;
+  if (action.testSongData) {
+    songsData = action.testSongData;
   } else {
     songsData = yield select(selectSongsData());
   }
 
-  const songItem = songsData?.results?.find((_song) => _song.trackId?.toString() === action.songId);
+  const songItem = songsData?.results?.find((song) => song.trackId?.toString() === action.songId);
 
   if (!songItem) {
     const response = yield call(getSongDetails, action.songId);
     const { ok, data } = response;
-    if (ok && data.results.length !== 0) {
+    if (ok && data.results.length) {
       yield put(successGetTrackDetails(data.results[0]));
     } else {
       const error = data?.originalError?.message ?? translate('something_went_wrong');
