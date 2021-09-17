@@ -88,7 +88,6 @@ export function TuneCard({ maxwidth, artistName, collectionName, cardImg, previe
       <Link to={`/songs/${songId}`} songId={songId}>
         {renderItemCard()}
       </Link>
-      ;
     </If>
   );
 }
