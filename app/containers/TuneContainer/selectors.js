@@ -1,6 +1,7 @@
 import { createSelector } from 'reselect';
 import { initialState } from './reducer';
 import get from 'lodash/get';
+
 /**
  * Direct selector to the tuneContainer state domain
  */
@@ -19,9 +20,6 @@ export const selectSearchTerm = () =>
   createSelector(selectTuneContainerDomain, (substate) => get(substate, 'searchTerm', null));
 
 export const selectSongId = () => createSelector(selectTuneContainerDomain, (substate) => get(substate, 'songId'));
-
-export const selectTracksCache = () =>
-  createSelector(selectTuneContainerDomain, (substate) => get(substate, 'tracksCache'));
 
 export const selectTrackDetails = () =>
   createSelector(selectTuneContainerDomain, (substate) => get(substate, 'trackDetails'));

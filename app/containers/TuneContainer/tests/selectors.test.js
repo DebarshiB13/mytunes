@@ -5,8 +5,7 @@ import {
   selectSongsError,
   selectTrackDetails,
   selectTrackError,
-  selectSongId,
-  selectTracksCache
+  selectSongId
 } from '../selectors';
 
 describe('TuneContainer selector tests', () => {
@@ -16,7 +15,7 @@ describe('TuneContainer selector tests', () => {
   let songsError;
   let trackError;
   let trackDetails;
-  let tracksCache;
+
   let songId;
 
   beforeEach(() => {
@@ -26,7 +25,6 @@ describe('TuneContainer selector tests', () => {
     songsError = 'There was some error while fetching the song information';
     trackError = 'Something went wrong';
     trackDetails = [{ songId }];
-    tracksCache = { songId: { artistName: 'Alan', url: 'https://abc2.mp3' } };
 
     mockedState = {
       tuneContainer: {
@@ -35,8 +33,7 @@ describe('TuneContainer selector tests', () => {
         songsError,
         songId,
         trackDetails,
-        trackError,
-        tracksCache
+        trackError
       }
     };
   });
@@ -72,10 +69,5 @@ describe('TuneContainer selector tests', () => {
   it('should select the songId', () => {
     const songIdSelector = selectSongId();
     expect(songIdSelector(mockedState)).toEqual(songId);
-  });
-
-  it('should select the tracksCache', () => {
-    const tracksCacheSelector = selectTracksCache();
-    expect(tracksCacheSelector(mockedState)).toEqual(tracksCache);
   });
 });

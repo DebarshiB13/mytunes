@@ -12,9 +12,8 @@ export const initialState = {
   songsData: [],
   songsError: null,
   songId: null,
-  trackDetails: {},
   trackError: null,
-  tracksCache: {}
+  trackDetails: null
 };
 
 export const { Types: tuneContainerTypes, Creators: tuneContainerCreators } = createActions({
@@ -43,15 +42,15 @@ export const tuneContainerReducer = (state = initialState, action) =>
         draft.songsData = [];
         break;
       case tuneContainerTypes.REQUEST_GET_TRACK_DETAILS:
+        draft.trackDetails = null;
+        draft.trackError = null;
         draft.songId = action.songId;
         break;
       case tuneContainerTypes.SUCCESS_GET_TRACK_DETAILS:
         draft.trackError = null;
-        draft.tracksCache[draft.songId] = action.data;
         draft.trackDetails = action.data;
         break;
       case tuneContainerTypes.FAILURE_GET_TRACK_DETAILS:
-        draft.trackDetails = {};
         draft.trackError = action.error;
         break;
       case tuneContainerTypes.CLEAR_ITUNE_SONGS:

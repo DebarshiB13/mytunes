@@ -75,9 +75,8 @@ describe('TuneContainer reducer tests', () => {
   it('should ensure that the trackDetails is present when FETCH_TRACK_DETAILS_SUCCESS is dispatched', () => {
     const songId = '12212';
     const data = { name: 'Sia' };
-    const tracksCache = { [songId]: data };
     state = { ...state, songId };
-    const expectedResult = { ...state, trackDetails: data, tracksCache };
+    const expectedResult = { ...state, trackDetails: data };
 
     expect(
       tuneContainerReducer(state, {

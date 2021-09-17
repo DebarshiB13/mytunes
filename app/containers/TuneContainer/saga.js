@@ -2,7 +2,7 @@ import { translate } from '@components/IntlGlobalProvider';
 import { getSongs, getSongDetails } from '@services/repoApi';
 import { takeLatest, call, put, select } from 'redux-saga/effects';
 import { tuneContainerCreators, tuneContainerTypes } from './reducer';
-import { selectTracksCache } from './selectors';
+import { selectSongsData } from './selectors';
 // Individual exports for testing
 const { REQUEST_GET_ITUNE_SONGS, REQUEST_GET_TRACK_DETAILS } = tuneContainerTypes;
 const { successGetItuneSongs, failureGetItuneSongs, successGetTrackDetails, failureGetTrackDetails } =
@@ -21,28 +21,26 @@ export function* getItuneSongs(action) {
 }
 
 export function* getTrackDetails(action) {
-  let songsCache;
-
-  if (action.testSagaCache) {
-    songsCache = action.testSagaCache;
+  let songsData;
+  if (action.testData) {
+    songsData = action.testData;
   } else {
-    songsCache = yield select(selectTracksCache());
+    songsData = yield select(selectSongsData());
   }
 
-  if (songsCache && !songsCache[action.songId]) {
+  const songItem = songsData?.results?.find((_song) => _song.trackId?.toString() === action.songId);
+
+  if (!songItem) {
     const response = yield call(getSongDetails, action.songId);
     const { ok, data } = response;
-
     if (ok && data.results.length !== 0) {
-      const _data = { ...data.results[0] };
-      yield put(successGetTrackDetails(_data));
+      yield put(successGetTrackDetails(data.results[0]));
     } else {
       const error = data?.originalError?.message ?? translate('something_went_wrong');
       yield put(failureGetTrackDetails(error));
     }
   } else {
-    const data = { ...songsCache[action.songId] };
-    yield put(successGetTrackDetails(data));
+    yield put(successGetTrackDetails(songItem));
   }
 }
 export default function* tuneContainerSaga() {

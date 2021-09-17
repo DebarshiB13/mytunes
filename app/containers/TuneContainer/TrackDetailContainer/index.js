@@ -16,15 +16,15 @@ import tuneContainerSaga from '../saga';
 import { useParams } from 'react-router';
 import { createStructuredSelector } from 'reselect';
 import styled from 'styled-components';
-import { Card } from 'antd';
+import { Card, Skeleton } from 'antd';
 import { TuneCard } from '@components/TuneCard';
 import If from '@components/If';
 import T from '@components/T';
-import { isEmpty } from 'lodash';
 
 const Container = styled.div`
   && {
     display: flex;
+    flex-direction: column;
     margin: 0 auto;
     padding: ${(props) => props.padding}em;
     min-height: ${(props) => props.minheight}em;
@@ -38,12 +38,14 @@ const CustomCard = styled(Card)`
     align-items: center;
     justify-content: center;
     padding: ${(props) => props.padding}em;
-    margin: ${(props) => props.margin};
     min-height: ${(props) => props.minheight}em;
     max-width: ${(props) => props.maxwidth}em;
+    border: 0;
   }
 `;
-
+const PlaceHolderDiv = styled.div`
+  min-width: 24em;
+`;
 function TrackDetailContainer({ dispatchGetTrackDetails, trackDetails, trackError }) {
   const { songId } = useParams();
 
@@ -53,34 +55,44 @@ function TrackDetailContainer({ dispatchGetTrackDetails, trackDetails, trackErro
 
   return (
     <Container minheight={40}>
-      <If condition={trackError && isEmpty(trackDetails)}>
-        <CustomCard data-testid="error-card">
-          <T data-testid="track-detail-error" id="something_went_wrong" />
-        </CustomCard>
-      </If>
-      <If condition={trackDetails && !trackError}>
-        <TuneCard
-          data-testid="tune-card"
-          artistName={trackDetails.artistName}
-          collectionName={trackDetails.collectionName}
-          previewUrl={trackDetails.previewUrl}
-          cardImg={trackDetails.artworkUrl100}
-        />
-      </If>
+      <CustomCard maxwidth={30}>
+        <PlaceHolderDiv></PlaceHolderDiv>
+        <Skeleton loading={!trackDetails && !trackError} active>
+          <If
+            condition={trackDetails && !trackError}
+            otherwise={
+              <CustomCard>
+                <T data-testid="track-detail-error" id="something_went_wrong" />
+              </CustomCard>
+            }
+          >
+            <TuneCard
+              key="hello-world"
+              data-testid="tune-card"
+              artistName={trackDetails?.artistName}
+              collectionName={trackDetails?.collectionName}
+              previewUrl={trackDetails?.previewUrl}
+              cardImg={trackDetails?.artworkUrl100}
+            />
+          </If>
+        </Skeleton>
+      </CustomCard>
     </Container>
   );
 }
 const mapStateToProps = createStructuredSelector({
   tuneContainer: selectTuneContainer(),
-  trackDetails: selectTrackDetails(),
-  trackError: selectTrackError()
+  trackError: selectTrackError(),
+  trackDetails: selectTrackDetails()
 });
+
 export function mapDispatchToProps(dispatch) {
   const { requestGetTrackDetails } = tuneContainerCreators;
   return {
     dispatchGetTrackDetails: (songId) => dispatch(requestGetTrackDetails(songId))
   };
 }
+
 const withConnect = connect(mapStateToProps, mapDispatchToProps);
 
 TrackDetailContainer.propTypes = {

@@ -20,8 +20,10 @@ describe('TuneContainer saga tests', () => {
   let songId = '18556408';
   let getItuneSongsGenerator = getItuneSongs({ searchTerm });
   let getTrackDetailsGenerator = getTrackDetails({ songId });
-  let trackDetails = { songName: 'song' };
-  let testSagaCache = { [songId]: { trackDetails } };
+  let songsData = {
+    resultCount: 1,
+    results: [{ song: 'abc', trackId: songId }]
+  };
 
   it('should start task to watch for REQUEST_GET_ITUNE_SONGS', () => {
     expect(generator.next().value).toEqual(takeLatest(tuneContainerTypes.REQUEST_GET_ITUNE_SONGS, getItuneSongs));
@@ -61,24 +63,12 @@ describe('TuneContainer saga tests', () => {
     expect(generator.next().value).toEqual(takeLatest(tuneContainerTypes.REQUEST_GET_TRACK_DETAILS, getTrackDetails));
   });
 
-  it('should use songsCache if available', () => {
-    getTrackDetailsGenerator = getTrackDetails({ songId, testSagaCache });
-
-    const res = getTrackDetailsGenerator.next().value;
-    expect(res).toEqual(
-      put({
-        type: tuneContainerTypes.SUCCESS_GET_TRACK_DETAILS,
-        data: testSagaCache[songId]
-      })
-    );
-  });
-
   it('should ensure that the action SUCCESS_GET_TRACK_DETAILS is dispatched when the api call succeeds', () => {
-    testSagaCache = {};
-    getTrackDetailsGenerator = getTrackDetails({ songId, testSagaCache });
-    const res = getTrackDetailsGenerator.next().value;
+    getTrackDetailsGenerator = getTrackDetails({ songId });
+    getTrackDetailsGenerator.next().value;
+    const res2 = getTrackDetailsGenerator.next().value;
 
-    expect(res).toEqual(call(getSongDetails, songId));
+    expect(res2).toEqual(call(getSongDetails, songId));
 
     const data = { results: [{ songId }] };
 
@@ -90,18 +80,31 @@ describe('TuneContainer saga tests', () => {
     );
   });
 
-  it('should ensure that the action SUCCESS_GET_TRACK_DETAILS is dispatched when the api call succeeds', () => {
-    testSagaCache = {};
-    getTrackDetailsGenerator = getTrackDetails({ songId, testSagaCache });
-    const res = getTrackDetailsGenerator.next().value;
+  it('should ensure that the action FAILURE_GET_TRACK_DETAILS is dispatched when the api call succeeds', () => {
+    getTrackDetailsGenerator = getTrackDetails({ songId });
+    getTrackDetailsGenerator.next().value;
+    const res2 = getTrackDetailsGenerator.next().value;
 
-    expect(res).toEqual(call(getSongDetails, songId));
+    expect(res2).toEqual(call(getSongDetails, songId));
     const error = translate('something_went_wrong');
 
     expect(getTrackDetailsGenerator.next(apiResponseGenerator(false, error)).value).toEqual(
       put({
         type: tuneContainerTypes.FAILURE_GET_TRACK_DETAILS,
         error
+      })
+    );
+  });
+
+  it('should ensure that songsData is selected and SUCCESS_GET_TRACK_DETAILS is dispatched when songsData contains the trackId', () => {
+    getTrackDetailsGenerator = getTrackDetails({ songId, testData: songsData });
+    const res = getTrackDetailsGenerator.next().value;
+
+    const item = songsData.results.find((_song) => _song.trackId === songId);
+    expect(res).toEqual(
+      put({
+        type: tuneContainerTypes.SUCCESS_GET_TRACK_DETAILS,
+        data: item
       })
     );
   });

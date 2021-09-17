@@ -96,7 +96,7 @@ TuneCard.propTypes = {
   cardImg: PropTypes.string,
   previewUrl: PropTypes.string,
   handleOnActionClick: PropTypes.func,
-  songId: PropTypes.string
+  songId: PropTypes.number
 };
 
 export default memo(TuneCard);

@@ -33,11 +33,11 @@ describe('<TrackDetailContainer />', () => {
 
   it('should render Errorcard when trackError is true ', () => {
     const error = 'something_went_wrong';
-    trackDetails = {};
+
     const { getByTestId } = renderWithIntl(
-      <TrackDetailContainer dispatchGetTrackDetails={submitSpy} trackError={error} trackDetails={trackDetails} />
+      <TrackDetailContainer dispatchGetTrackDetails={submitSpy} trackError={error} />
     );
-    expect(getByTestId('error-card')).toBeInTheDocument();
+    expect(getByTestId('track-detail-error')).toBeInTheDocument();
   });
 
   it('should render TuneCard trackDetails is not empty', () => {
@@ -48,8 +48,7 @@ describe('<TrackDetailContainer />', () => {
   });
 
   it('should dispatch when FETCH_TRACK_DETAILS on mount', async () => {
-    trackDetails = {};
-    renderWithIntl(<TrackDetailContainer dispatchGetTrackDetails={submitSpy} trackDetails={trackDetails} />);
+    renderWithIntl(<TrackDetailContainer dispatchGetTrackDetails={submitSpy} />);
 
     await timeout(500);
     expect(submitSpy).toBeCalled();
