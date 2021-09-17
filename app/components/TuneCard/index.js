@@ -57,32 +57,39 @@ export function TuneCard({ maxwidth, artistName, collectionName, cardImg, previe
     }
   };
 
-  return (
-    <Link to={`/details/${songId}`}>
-      <ItemCard maxwidth={maxwidth} data-testid="tune-card">
-        <StyledT fontSize={1.6} data-testid="artist-name">
-          {artistName}
-        </StyledT>
-        <Image src={cardImg} width="100%" preview={false} />
-        <StyledT fontSize={1.2}>{collectionName}</StyledT>
+  const renderItemCard = () => (
+    <ItemCard maxwidth={maxwidth} data-testid="tune-card">
+      <StyledT fontSize={1.6} data-testid="artist-name">
+        {artistName}
+      </StyledT>
+      <Image src={cardImg} width="100%" preview={false} />
+      <StyledT fontSize={1.2}>{collectionName}</StyledT>
 
-        <IconButton
-          shape="circle"
-          type="text"
-          data-testid="play-pause-btn"
-          onClick={handlePlayPause}
-          icon={
-            <If
-              condition={!audioRef.current?.paused && audioRef.current?.src}
-              otherwise={<PlayCircleFilled style={iconStyle} />}
-            >
-              <PauseCircleFilled style={iconStyle} />
-            </If>
-          }
-        />
-        <audio ref={audioRef} data-testid="audio" src={previewUrl}></audio>
-      </ItemCard>
-    </Link>
+      <IconButton
+        shape="circle"
+        type="text"
+        data-testid="play-pause-btn"
+        onClick={handlePlayPause}
+        icon={
+          <If
+            condition={!audioRef.current?.paused && audioRef.current?.src}
+            otherwise={<PlayCircleFilled style={iconStyle} />}
+          >
+            <PauseCircleFilled style={iconStyle} />
+          </If>
+        }
+      />
+      <audio ref={audioRef} data-testid="audio" src={previewUrl}></audio>
+    </ItemCard>
+  );
+
+  return (
+    <If condition={songId} otherwise={renderItemCard()}>
+      <Link to={`/songs/${songId}`} songId={songId}>
+        {renderItemCard()}
+      </Link>
+      ;
+    </If>
   );
 }
 
