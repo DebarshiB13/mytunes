@@ -1,8 +1,10 @@
 name: AWS Build and Deploy
 on:
-  pull_request:
   push:
+  pull_request:
     branches:
+      - master
+      - feat/itunes-trackdetails
 jobs:
   build-and-aws-deploy:
     runs-on: ubuntu-latest
