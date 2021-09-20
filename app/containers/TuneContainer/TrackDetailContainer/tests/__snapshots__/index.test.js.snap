@@ -73,7 +73,6 @@ exports[`<TrackDetailContainer /> should render and match the snapshot 1`] = `
               </button>
               <audio
                 data-testid="audio"
-                src="https://bcw.mp3"
               />
             </div>
           </div>

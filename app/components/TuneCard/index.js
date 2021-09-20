@@ -43,8 +43,9 @@ export function TuneCard({ maxwidth, artistName, collectionName, cardImg, previe
   const audioRef = useRef();
   const [play, setPlay] = useState(false);
 
-  const handlePlayPause = (e) => {
+  const handlePlayPause = (e, url) => {
     e.preventDefault();
+    audioRef.current.src = url;
     const isPaused = audioRef.current.paused;
     if (isPaused) {
       audioRef.current.play();
@@ -69,7 +70,7 @@ export function TuneCard({ maxwidth, artistName, collectionName, cardImg, previe
         shape="circle"
         type="text"
         data-testid="play-pause-btn"
-        onClick={handlePlayPause}
+        onClick={(e) => handlePlayPause(e, previewUrl)}
         icon={
           <If
             condition={!audioRef.current?.paused && audioRef.current?.src}
@@ -79,7 +80,7 @@ export function TuneCard({ maxwidth, artistName, collectionName, cardImg, previe
           </If>
         }
       />
-      <audio ref={audioRef} data-testid="audio" src={previewUrl}></audio>
+      <audio ref={audioRef} data-testid="audio"></audio>
     </ItemCard>
   );
 
