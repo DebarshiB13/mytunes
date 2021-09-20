@@ -145,7 +145,7 @@ describe('<TuneContainer /> container tests', () => {
     let current;
 
     const handleOnActionClickSpy = jest.fn((elem) => {
-      if (current && current?.src !== elem.src) {
+      if (current && current?.paused !== elem.paused) {
         current.paused = true;
       }
       current = elem;

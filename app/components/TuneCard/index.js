@@ -45,9 +45,9 @@ export function TuneCard({ maxwidth, artistName, collectionName, cardImg, previe
 
   const handlePlayPause = (e, url) => {
     e.preventDefault();
-    audioRef.current.src = url;
     const isPaused = audioRef.current.paused;
     if (isPaused) {
+      audioRef.current.src = url;
       audioRef.current.play();
     } else {
       audioRef.current.pause();
