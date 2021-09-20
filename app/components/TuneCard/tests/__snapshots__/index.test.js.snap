@@ -4,61 +4,92 @@ exports[`<TuneCard /> should render and match the snapshot 1`] = `
 <body>
   <div>
     <div
-      class="ant-card ant-card-bordered TuneCard__ItemCard-sc-1cl6pnu-0 dBepYt"
+      class="ant-card ant-card-bordered TuneCard__ItemCard-sc-1cl6pnu-0 hjgfUg"
       data-testid="tune-card"
-      maxwidth="300"
+      maxwidth="240"
     >
+      <div
+        class="ant-card-cover"
+      >
+        <img
+          alt="example"
+          src="https://is4-ssl.mzstatic.com/image/thumb/Music115/v4/8d/af/2e/8daf2ed5-b5c1-9c53-17fc-a10d7a247121/source/100x100bb.jpg"
+        />
+      </div>
       <div
         class="ant-card-body"
       >
-        <h1
-          class="ant-typography TuneCard__StyledT-sc-1cl6pnu-2 eJcBSi"
-          data-testid="artist-name"
-          font-size="1.6"
-        >
-          AlanWalker
-        </h1>
         <div
-          class="ant-image"
-          style="width: 100%;"
+          class="ant-row"
         >
-          <img
-            class="ant-image-img"
-            src="https://is4-ssl.mzstatic.com/image/thumb/Music115/v4/8d/af/2e/8daf2ed5-b5c1-9c53-17fc-a10d7a247121/source/100x100bb.jpg"
-          />
-        </div>
-        <h1
-          class="ant-typography TuneCard__StyledT-sc-1cl6pnu-2 hVdOjy"
-          font-size="1.2"
-        >
-          Some Collection
-        </h1>
-        <button
-          class="ant-btn ant-btn-text ant-btn-circle ant-btn-icon-only TuneCard__IconButton-sc-1cl6pnu-1 eahDeJ"
-          data-testid="play-pause-btn"
-          type="button"
-        >
-          <span
-            aria-label="play-circle"
-            class="anticon anticon-play-circle"
-            role="img"
-            style="font-size: 32px;"
+          <div
+            class="ant-col"
           >
-            <svg
-              aria-hidden="true"
-              data-icon="play-circle"
-              fill="currentColor"
-              focusable="false"
-              height="1em"
-              viewBox="64 64 896 896"
-              width="1em"
+            <h1
+              class="ant-typography TuneCard__StyledT-sc-1cl6pnu-2 eJcBSi"
+              data-testid="artist-name"
+              font-size="1.6"
             >
-              <path
-                d="M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64zm144.1 454.9L437.7 677.8a8.02 8.02 0 01-12.7-6.5V353.7a8 8 0 0112.7-6.5L656.1 506a7.9 7.9 0 010 12.9z"
-              />
-            </svg>
-          </span>
-        </button>
+              AlanWalker
+            </h1>
+          </div>
+        </div>
+        <div
+          class="ant-row"
+        >
+          <div
+            class="ant-col"
+          >
+            <div
+              class="ant-card-meta"
+              font-size="1.2"
+            >
+              <div
+                class="ant-card-meta-detail"
+              >
+                <div
+                  class="ant-card-meta-title"
+                >
+                  Some Collection
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div
+          class="ant-row"
+        >
+          <div
+            class="ant-col"
+          >
+            <button
+              class="ant-btn ant-btn-text ant-btn-circle ant-btn-icon-only TuneCard__IconButton-sc-1cl6pnu-1 eahDeJ"
+              data-testid="play-pause-btn"
+              type="button"
+            >
+              <span
+                aria-label="play-circle"
+                class="anticon anticon-play-circle"
+                role="img"
+                style="font-size: 32px;"
+              >
+                <svg
+                  aria-hidden="true"
+                  data-icon="play-circle"
+                  fill="currentColor"
+                  focusable="false"
+                  height="1em"
+                  viewBox="64 64 896 896"
+                  width="1em"
+                >
+                  <path
+                    d="M512 64C264.6 64 64 264.6 64 512s200.6 448 448 448 448-200.6 448-448S759.4 64 512 64zm144.1 454.9L437.7 677.8a8.02 8.02 0 01-12.7-6.5V353.7a8 8 0 0112.7-6.5L656.1 506a7.9 7.9 0 010 12.9z"
+                  />
+                </svg>
+              </span>
+            </button>
+          </div>
+        </div>
         <audio
           data-testid="audio"
         />

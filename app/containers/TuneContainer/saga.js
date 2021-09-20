@@ -22,8 +22,8 @@ export function* getItuneSongs(action) {
 
 export function* getTrackDetails(action) {
   let songsData;
-  if (action.testSongData) {
-    songsData = action.testSongData;
+  if (action.songsDataCache) {
+    songsData = action.songsDataCache;
   } else {
     songsData = yield select(selectSongsData());
   }

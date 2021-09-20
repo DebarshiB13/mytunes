@@ -38,8 +38,8 @@ describe('<TuneCard />', () => {
     expect(baseElement).toMatchSnapshot();
   });
 
-  it('should render and match artistName, collectionName, imgUrl', () => {
-    const { getByText, baseElement, getByTestId } = renderWithIntl(
+  it('should render and match artistName, collectionName', () => {
+    const { getByText, getByTestId } = renderWithIntl(
       <TuneCard
         artistName={artistName}
         collectionName={collectionName}
@@ -51,7 +51,6 @@ describe('<TuneCard />', () => {
 
     expect(getByTestId('artist-name').textContent).toEqual(artistName);
     expect(getByText(collectionName).textContent).toEqual(collectionName);
-    expect(baseElement.getElementsByClassName('ant-image-img')[0].src).toEqual(cardImg);
   });
 
   it('should call handlePlayPause && handleOnActionClick on Click', async () => {

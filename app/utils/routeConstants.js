@@ -16,7 +16,7 @@ export default {
     exact: true
   },
   song: {
-    route: '/:songId',
+    route: '/songs/:songId',
     props: {
       maxwidth: 500,
       padding: 20

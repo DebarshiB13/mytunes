@@ -97,7 +97,7 @@ describe('TuneContainer saga tests', () => {
   });
 
   it('should ensure that songsData is selected and SUCCESS_GET_TRACK_DETAILS is dispatched when songsData contains the trackId', () => {
-    getTrackDetailsGenerator = getTrackDetails({ songId, testSongData: songsData });
+    getTrackDetailsGenerator = getTrackDetails({ songId, songsDataCache: songsData });
     const res = getTrackDetailsGenerator.next().value;
 
     expect(res).toEqual(
