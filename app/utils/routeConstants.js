@@ -1,6 +1,6 @@
 export default {
   repos: {
-    route: '/',
+    route: '/repos',
     props: {
       maxwidth: 500,
       padding: 20
@@ -8,7 +8,7 @@ export default {
     exact: true
   },
   songs: {
-    route: '/songs',
+    route: '/',
     props: {
       maxwidth: 500,
       padding: 20
@@ -16,7 +16,7 @@ export default {
     exact: true
   },
   song: {
-    route: '/songs/:songId',
+    route: '/:songId',
     props: {
       maxwidth: 500,
       padding: 20
