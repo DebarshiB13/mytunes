@@ -3,14 +3,13 @@ on:
   pull_request:
     branches:
       - master
-      - feat/itunes-trackdetails
 jobs:
   build-and-test:
     name: Build & Test
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        node-version: [12.x]
+        node-version: [14.x]
     steps:
       - uses: actions/checkout@v2
 
