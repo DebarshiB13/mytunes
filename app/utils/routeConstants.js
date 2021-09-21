@@ -16,11 +16,15 @@ export default {
     exact: true
   },
   song: {
-    route: '/:songId',
+    route: '/songs/:songId',
     props: {
       maxwidth: 500,
       padding: 20
     },
+    exact: true
+  },
+  newHomePath: {
+    route: '/new-home-path',
     exact: true
   }
 };

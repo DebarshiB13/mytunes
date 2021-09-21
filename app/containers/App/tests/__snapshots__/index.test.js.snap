@@ -19,6 +19,11 @@ exports[`<App /> container tests should render and match the snapshot 1`] = `
       Wednesday Solutions
     </p>
   </header>
+  <button
+    style="margin: 20px;"
+  >
+    Go to the new route
+  </button>
   <main
     class="ant-layout-content"
   />
