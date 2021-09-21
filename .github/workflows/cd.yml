@@ -4,7 +4,6 @@ on:
   push:
     branches:
       - master
-      - feat/itunes-trackdetails
 jobs:
   build-and-aws-deploy:
     runs-on: ubuntu-latest
