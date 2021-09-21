@@ -22,9 +22,5 @@ export default {
       padding: 20
     },
     exact: true
-  },
-  newHomePath: {
-    route: '/new-home-path',
-    exact: true
   }
 };

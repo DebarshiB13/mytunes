@@ -1,4 +1,3 @@
-import React from 'react';
 import NotFound from '@containers/NotFoundPage/Loadable';
 import HomeContainer from '@containers/HomeContainer/Loadable';
 import routeConstants from '@utils/routeConstants';
@@ -16,10 +15,6 @@ export const routeConfig = {
   song: {
     component: TrackDetailContainer,
     ...routeConstants.song
-  },
-  newHomePath: {
-    component: () => <h1>New Home path</h1>,
-    ...routeConstants.newHomePath
   },
   notFoundPage: {
     component: NotFound,
