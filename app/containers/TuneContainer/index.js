@@ -10,24 +10,43 @@ import { connect } from 'react-redux';
 import { injectIntl } from 'react-intl';
 import { createStructuredSelector } from 'reselect';
 import { compose } from 'redux';
-import selectTuneContainer, { selectSearchTerm, selectSongsData, selectSongsError } from './selectors';
-import { tuneContainerCreators } from './reducer';
-import tuneContainerSaga from './saga';
 import { injectSaga } from 'redux-injectors';
 import get from 'lodash/get';
 import isEmpty from 'lodash/isEmpty';
-import { Input } from 'antd';
+import { Input, Card, Skeleton, Row } from 'antd';
 import styled from 'styled-components';
 import debounce from 'lodash/debounce';
+import T from '@components/T';
+import { TuneCard } from '@components/TuneCard';
+import For from '@components/For';
+import If from '@app/components/If';
+import selectTuneContainer, { selectSearchTerm, selectSongsData, selectSongsError } from './selectors';
+import { tuneContainerCreators } from './reducer';
+import tuneContainerSaga from './saga';
 
 const { Search } = Input;
 
+const CustomCard = styled(Card)`
+  && {
+    margin: 20px 0;
+    flex-wrap: wrap;
+    color: ${(props) => props.color};
+    ${(props) => props.color && `color: ${props.color}`};
+  }
+`;
+
+const CardRow = styled(Row)`
+  && {
+    display: flex;
+    justify-content: space-around;
+    flex-wrap: wrap;
+  }
+`;
 const Container = styled.div`
   && {
     display: flex;
     flex-direction: column;
-    max-width: ${(props) => props.maxwidth}px;
-    width: 100%;
+    width: 70%;
     margin: 0 auto;
     padding: ${(props) => props.padding}px;
   }
@@ -43,6 +62,7 @@ export function TuneContainer({
   padding
 }) {
   const [loading, setLoading] = useState(false);
+  const [currentTrack, setCurrentTrack] = useState(null);
 
   useEffect(() => {
     const loaded = get(songsData, 'results', null) || songsError;
@@ -60,7 +80,6 @@ export function TuneContainer({
   }, []);
 
   const handleOnChange = (term) => {
-    // const escapedTerm = term.toLowerCase().replace(/\s+/g, '');
     if (!isEmpty(term)) {
       dispatchItuneSongs(term);
       setLoading(true);
@@ -70,15 +89,83 @@ export function TuneContainer({
   };
 
   const debouncedHandleOnChange = debounce(handleOnChange, 200);
+
+  const renderSongList = () => {
+    const results = get(songsData, 'results', []);
+    const resultCount = get(songsData, 'resultCount', 0);
+
+    const handleOnActionClick = (ref) => {
+      setCurrentTrack(ref);
+      const isPaused = currentTrack?.current?.paused;
+      if (!isPaused && ref?.current.src !== currentTrack?.current?.src) {
+        currentTrack?.current.pause();
+      }
+    };
+
+    return (
+      <If condition={results.length || loading} otherwise={null}>
+        <CustomCard>
+          <Skeleton loading={loading} active>
+            <If condition={searchTerm} otherwise={null}>
+              <T id="search_term" values={{ searchTerm }} />
+            </If>
+            <If condition={resultCount}>
+              <T id="matching_tracks" values={{ resultCount }} />
+            </If>
+            <For
+              ParentComponent={CardRow}
+              of={results}
+              renderItem={(result, index) => (
+                <TuneCard
+                  data-testid="tune-card"
+                  key={index}
+                  handleOnActionClick={handleOnActionClick}
+                  artistName={result.artistName}
+                  collectionName={result.collectionName}
+                  cardImg={result.artworkUrl100}
+                  previewUrl={result.previewUrl}
+                  songId={result.trackId}
+                />
+              )}
+            />
+          </Skeleton>
+        </CustomCard>
+      </If>
+    );
+  };
+
+  const renderErrorState = () => {
+    let songError;
+    if (songsError) {
+      songError = songsError;
+    } else if (!get(songsData, 'resultCount', 0)) {
+      songError = 'track_search_default';
+    }
+    return (
+      <If condition={!loading && songError}>
+        <CustomCard
+          data-testid="error-card"
+          color={songsError ? 'red' : 'grey'}
+          title={intl.formatMessage({ id: 'track_list' })}
+        >
+          <T id={songError} />
+        </CustomCard>
+      </If>
+    );
+  };
+
   return (
     <Container maxwidth={maxwidth} padding={padding}>
-      <Search
-        data-testid="search-bar"
-        defaultValue={searchTerm}
-        type="text"
-        onChange={(evt) => debouncedHandleOnChange(evt.target.value)}
-      />
-      <div>{loading ? 'Loading' : 'Loaded'}</div>
+      <CustomCard>
+        <Search
+          data-testid="search-bar"
+          defaultValue={searchTerm}
+          type="text"
+          onChange={(evt) => debouncedHandleOnChange(evt.target.value)}
+        />
+      </CustomCard>
+      {renderSongList()}
+      {renderErrorState()}
     </Container>
   );
 }

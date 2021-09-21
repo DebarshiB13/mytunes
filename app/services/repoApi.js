@@ -5,3 +5,4 @@ const songApi = generateApiClient('itunes');
 
 export const getRepos = (repoName) => repoApi.get(`/search/repositories?q=${repoName}`);
 export const getSongs = (searchTerm) => songApi.get(`/search?term=${searchTerm}`);
+export const getSongDetails = (songId) => songApi.get(`/lookup?id=${songId}`);
