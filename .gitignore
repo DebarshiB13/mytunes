@@ -8,7 +8,6 @@ coverage/
 switcher_backup.env
 yarn-error.log
 storybook-static
-*.patch
 
 # Cruft
 .DS_Store

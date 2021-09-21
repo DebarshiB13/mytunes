@@ -10,11 +10,5 @@
   "repository_name": "Repository Name: {name}",
   "repository_full_name": "Repository full name: {fullName}",
   "repository_stars": "Repository stars: {stars}",
-  "wednesday_solutions": "Wednesday Solutions",
-  "track_search_default": "Search for a track or artist by entering it in the search box",
-  "track_list": "Track List",
-  "search_term": "Search Term: {searchTerm}",
-  "artist_name": "Artist name {artistName}",
-  "collection_name": "Collection name {collectionName}",
-  "matching_tracks": "Total number of tracks {resultCount}"
+  "wednesday_solutions": "Wednesday Solutions"
 }

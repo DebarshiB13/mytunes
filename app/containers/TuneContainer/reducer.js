@@ -3,27 +3,18 @@
  * TuneContainer reducer
  *
  */
-
+import { translate } from '@app/components/IntlGlobalProvider/index';
 import produce from 'immer';
+import get from 'lodash/get';
 import { createActions } from 'reduxsauce';
 
-export const initialState = {
-  searchTerm: null,
-  songsData: [],
-  songsError: null,
-  songId: null,
-  trackError: null,
-  trackDetails: null
-};
+export const initialState = { searchTerm: null, songsData: [], songsError: null };
 
 export const { Types: tuneContainerTypes, Creators: tuneContainerCreators } = createActions({
   requestGetItuneSongs: ['searchTerm'],
   successGetItuneSongs: ['data'],
   failureGetItuneSongs: ['error'],
-  clearItuneSongs: [],
-  requestGetTrackDetails: ['songId'],
-  successGetTrackDetails: ['data'],
-  failureGetTrackDetails: ['error']
+  clearItuneSongs: []
 });
 
 /* eslint-disable default-case, no-param-reassign */
@@ -38,20 +29,8 @@ export const tuneContainerReducer = (state = initialState, action) =>
         draft.songsError = null;
         break;
       case tuneContainerTypes.FAILURE_GET_ITUNE_SONGS:
-        draft.songsError = action.error;
+        draft.songsError = get(action.error, 'message', translate('something_went_wrong'));
         draft.songsData = [];
-        break;
-      case tuneContainerTypes.REQUEST_GET_TRACK_DETAILS:
-        draft.trackDetails = null;
-        draft.trackError = null;
-        draft.songId = action.songId;
-        break;
-      case tuneContainerTypes.SUCCESS_GET_TRACK_DETAILS:
-        draft.trackError = null;
-        draft.trackDetails = action.data;
-        break;
-      case tuneContainerTypes.FAILURE_GET_TRACK_DETAILS:
-        draft.trackError = action.error;
         break;
       case tuneContainerTypes.CLEAR_ITUNE_SONGS:
         return initialState;

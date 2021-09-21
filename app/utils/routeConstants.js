@@ -1,13 +1,5 @@
 export default {
   repos: {
-    route: '/repos',
-    props: {
-      maxwidth: 500,
-      padding: 20
-    },
-    exact: true
-  },
-  songs: {
     route: '/',
     props: {
       maxwidth: 500,
@@ -15,8 +7,8 @@ export default {
     },
     exact: true
   },
-  song: {
-    route: '/songs/:songId',
+  songs: {
+    route: '/songs',
     props: {
       maxwidth: 500,
       padding: 20
