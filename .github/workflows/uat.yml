@@ -1,4 +1,4 @@
-name: AWS Build and Deploy
+name: UAT on PR
 on:
   pull_request:
   push:
@@ -12,6 +12,11 @@ jobs:
         node-version: [14.x]
     steps:
       - uses: actions/checkout@v2
+
+      - name: Extract branch name
+        shell: bash
+        run: echo ::set-output name=branch::${{github.event.pull_request.head.ref}}
+        id: branch
 
       - name: Use NodeJS ${{matrix.node-version}}
         uses: actions/setup-node@v2
@@ -30,7 +35,7 @@ jobs:
         run: yarn
 
       - name: Build
-        run: yarn build
+        run: yarn build:uat
 
       - name: Deploy to S3
-        run: aws s3 sync ./build s3://${{ secrets.AWS_PRODUCTION_BUCKET_NAME }}
+        run: aws s3 sync ./build s3://${{ secrets.AWS_PRODUCTION_BUCKET_NAME }}/${{ steps.branch.outputs.branch }}
