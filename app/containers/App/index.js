@@ -26,10 +26,18 @@ const theme = {
   bg: colors.secondary
 };
 
-export function App({ location }) {
+export function App({ history, location }) {
   return (
     <ThemeProvider theme={theme}>
       <Header />
+      <button
+        style={{ margin: '20px' }}
+        onClick={() => {
+          history.push(routeConfig.newHomePath.route);
+        }}
+      >
+        Go to the new route
+      </button>
       <Layout.Content>
         <For
           ParentComponent={(props) => <Switch {...props} />}
@@ -58,6 +66,8 @@ export function App({ location }) {
   );
 }
 App.propTypes = {
-  location: PropTypes.object
+  location: PropTypes.object,
+  history: PropTypes.object,
+  push: PropTypes.func
 };
 export default compose(withRouter)(App);
