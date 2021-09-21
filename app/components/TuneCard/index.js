@@ -96,7 +96,7 @@ export function TuneCard({ maxwidth, artistName, collectionName, cardImg, previe
 
   return (
     <If condition={songId} otherwise={renderItemCard()}>
-      <Link to={`/songs/${songId}`}>{renderItemCard()}</Link>
+      <Link to={`/${songId}`}>{renderItemCard()}</Link>
     </If>
   );
 }
